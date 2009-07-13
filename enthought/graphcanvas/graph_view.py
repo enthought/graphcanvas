@@ -2,10 +2,11 @@ import networkx
 
 from enthought.enable.api import ComponentEditor, Scrolled,Viewport
 from enthought.enable.tools.api import ViewportPanTool
-from enthought.traits.api import HasTraits, Instance, Dict, Any
+from enthought.traits.api import HasTraits, Instance, Dict, Any, Enum
 from enthought.traits.ui.api import View, Item
 
 from dag_container import DAGContainer
+from graph_container import GraphContainer
 from graph_node_component import GraphNodeComponent
 from graph_node_selection_tool import GraphNodeSelectionTool
 
@@ -38,22 +39,29 @@ class GraphView(HasTraits):
     # The graph to be visualized
     graph = Instance(networkx.Graph)
     
+    # How the graph's visualization should be layed out
+    layout = Enum('spring', 'shell', 'tree')    
+    
     # Scrolled contained which holds the canvas in a viewport
     _container = Instance(Scrolled)
     
     # The canvas which the graph will be drawn on
-    _canvas = Instance(DAGContainer)
+    _canvas = Instance(GraphContainer)
 
     traits_view = View(Item('_container', editor=ComponentEditor(),
                             show_label=False),
-                        width=1600,
+                        width=400,
                         height=400,
                         resizable=True)
     
     def __canvas_default(self):
         """ default setter for _canvas
         """
-        container = DAGContainer()
+        if self.graph.directed:
+            container = DAGContainer(style=self.layout)
+        else:
+            container = GraphContainer(style=self.layout)
+            
         container.tools.append(GraphNodeSelectionTool(component=container))
         return container
     
@@ -73,49 +81,7 @@ class GraphView(HasTraits):
         """
         for node in new.nodes():
             # creating a component will automatically add it to the canvas
-            GraphNodeComponent(container=self._canvas, value=node,
-                                  children=self.graph.successors(node))
+            GraphNodeComponent(container=self._canvas, value=node)
+                
             
         self._canvas.graph = new
-                        
-if __name__ == '__main__':
-    from enthought.traits.api import Str
-    g = graph_from_dict({'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']})
-
-    class BaseNode(HasTraits):
-        pass
-    
-    class ExpressionNode(BaseNode):
-        stmt = Str()
-        
-        def __str__(self):
-            return self.stmt
-        
-    class IfNode(BaseNode):
-        if_condition = Str()
-        lbranch = Instance(BaseNode)
-    
-        def __str__(self):
-            return self.if_condition
-        
-    class IfElseNode(IfNode):
-        rbranch = Instance(BaseNode)
-        
-        def __str__(self):
-            return self.if_condition + ": else"
-                            
-    success_node = ExpressionNode(stmt='horray')
-    fail_node = ExpressionNode(stmt='boo')
-    if_a_gt_10_else = IfElseNode(if_condition='a>10', lbranch=success_node, rbranch=fail_node)
-    if_a_gt_5 = IfNode(if_condition='a>5', lbranch=if_a_gt_10_else)
-#    g = Graph({if_a_gt_5:[if_a_gt_10_else], if_a_gt_10_else:[success_node, fail_node], 
-#               success_node:[], fail_node:[]})
-
-#    g = networkx.DiGraph()
-#    g.add_edge(if_a_gt_5, if_a_gt_10_else)
-#    g.add_edge(if_a_gt_10_else, success_node)
-#    g.add_edge(if_a_gt_10_else, fail_node)
-
-    
-    GraphView(graph=g).configure_traits()
-    

@@ -28,9 +28,6 @@ class GraphNodeComponent(Component):
     """ An Enable Component which represents a graph node.
     """
     
-    # Children of this node
-    children = List()
-    
     # The level from the root. This is used for layout and may not be
     # meaningful in graphs with no root level.
     level = Int(0)
