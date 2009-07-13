@@ -3,7 +3,7 @@ import numpy
 
 from enthought.enable.api import Container
 from enthought.kiva import CAP_BUTT
-from enthought.traits.api import Instance, Enum
+from enthought.traits.api import Instance, Enum, Bool
 
 class GraphContainer(Container):
     """ Enable Container for Directed Acyclic Graphs
@@ -14,10 +14,17 @@ class GraphContainer(Container):
     
     style = Enum('spring', 'tree', 'shell', 'circular')
     
+    # graph layout is different than Enable's layout: graph layout is
+    # the relative positioning on nodes, and is very expensive
+    _graph_layout_needed = Bool(True)
+        
     def do_layout(self, size=None, force=False):
         """ Nodes of the graph will be layed out based on the the style
             attribute
-        """ 
+        """         
+        
+        if not self._graph_layout_needed:
+            return
         
         def _apply_graphviz_layout(layout):
             min_x = min([pos[0] for pos in layout.values()])
@@ -43,7 +50,8 @@ class GraphContainer(Container):
             for component in self.components:
                 component.x = self.width * layout[component._key][0]
                 component.y = self.height * layout[component._key][1]
-            
+        
+        self._graph_layout_needed = False    
             
 
     def draw(self, gc, view_bounds=None, mode="default"):
@@ -78,3 +86,6 @@ class GraphContainer(Container):
             gc.line_to(dest.x + dest.width/2, dest.y + dest.height)
             gc.draw_path()
             gc.restore_state()
+            
+    def _graph_changed(self, new):
+        self._graph_layout_needed = True    

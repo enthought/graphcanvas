@@ -79,7 +79,8 @@ class GraphNodeComponent(Component):
         
         x = self.x
         y = self.y
-        
+
+        gc.save_state()
         gc.begin_path()
         gc.move_to(x + end_radius, y)
         gc.arc_to(x + self.width, y,
@@ -101,6 +102,7 @@ class GraphNodeComponent(Component):
                 "pad")
 
         gc.draw_path()
+        gc.restore_state()
         
     def __key_default(self):
         return self.value
