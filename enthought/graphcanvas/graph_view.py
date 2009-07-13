@@ -40,7 +40,7 @@ class GraphView(HasTraits):
     graph = Instance(networkx.Graph)
     
     # How the graph's visualization should be layed out
-    layout = Enum('spring', 'shell', 'tree')    
+    layout = Enum('spring', 'tree', 'shell', 'circular')
     
     # Scrolled contained which holds the canvas in a viewport
     _container = Instance(Scrolled)
@@ -85,3 +85,6 @@ class GraphView(HasTraits):
                 
             
         self._canvas.graph = new
+
+    def _layout_changed(self, new):
+        self._canvas.style = new

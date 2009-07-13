@@ -12,27 +12,32 @@ class GraphContainer(Container):
     bounds = [350, 350]
     graph = Instance(networkx.Graph)
     
-    style = Enum('tree', 'shell', 'spring')
+    style = Enum('spring', 'tree', 'shell', 'circular')
     
     def do_layout(self, size=None, force=False):
         """ Nodes of the graph will be layed out based on the the style
             attribute
         """ 
         
-        if self.style == 'tree':
-            layout = networkx.pygraphviz_layout(self.graph, prog='dot')
-            
+        def _apply_graphviz_layout(layout):
             min_x = min([pos[0] for pos in layout.values()])
             max_y = max([pos[1] for pos in layout.values()])
             
             for component in self.components:
                 component.x = layout[component._key][0] - min_x
                 component.y = self.height - max_y + layout[component._key][1]
+        
+        if self.style == 'tree':
+            layout = networkx.pygraphviz_layout(self.graph, prog='dot')
+            _apply_graphviz_layout(layout)
         elif self.style == 'shell':
             layout = networkx.shell_layout(self.graph)
             for component in self.components:
                 component.y = self.width * (1 + layout[component._key][0])/2
                 component.x = self.height * (1 + layout[component._key][1])/2
+        elif self.style == 'circular':
+            layout = networkx.pygraphviz_layout(self.graph, prog='twopi')
+            _apply_graphviz_layout(layout)
         else:
             layout = networkx.spring_layout(self.graph)
             for component in self.components:
