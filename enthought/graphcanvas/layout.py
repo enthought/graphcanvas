@@ -14,8 +14,9 @@ def tree_layout(graph, dim=2, scale=1):
     roots = numpy.array(tree.nodes())[numpy.where(numpy.array(tree.in_degree()) < 1)]
 
 
-    # TODO: use the roots to walk the tree(s) to get the depths
-    
+    # Find the tree width at every depth in order to layout
+    # the nodes in a justified manner 
+
     depths = []
     for node in tree.nodes():
         depth = 0
@@ -40,12 +41,15 @@ def tree_layout(graph, dim=2, scale=1):
             for child in tree.successors(curr_node):
                 node_stack.append((curr_depth + 1, child))
 
-            draw_depth = float(curr_depth)/max_depth
+            # top-down
+            draw_depth = 1.0 - float(curr_depth)/max_depth
             depth_width = float(widths[curr_depth])
-            scale_width = depth_width/max_width
-            draw_width = scale_width * nodes_positioned_at_depth[curr_depth]/depth_width
-            nodes_positioned_at_depth[curr_depth] += 1            
 
+            # center align
+            nodes_positioned_at_depth[curr_depth] += 1    
+            width_positions = numpy.linspace(0, 1, depth_width+2) 
+            draw_width = width_positions[nodes_positioned_at_depth[curr_depth]]
+            
             positions[curr_node] = (draw_width, draw_depth)
                 
     
