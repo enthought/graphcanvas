@@ -5,6 +5,8 @@ from enthought.enable.api import Container
 from enthought.kiva import CAP_BUTT
 from enthought.traits.api import Instance, Enum, Bool
 
+from layout import tree_layout
+
 class GraphContainer(Container):
     """ Enable Container for Directed Acyclic Graphs
     """
@@ -35,8 +37,10 @@ class GraphContainer(Container):
                 component.y = self.height - max_y + layout[component._key][1]
         
         if self.style == 'tree':
-            layout = networkx.pygraphviz_layout(self.graph, prog='dot')
-            _apply_graphviz_layout(layout)
+            layout = tree_layout(self.graph)
+            for component in self.components:
+                component.x = self.width * layout[component._key][0]
+                component.y = self.height * layout[component._key][1]
         elif self.style == 'shell':
             layout = networkx.shell_layout(self.graph)
             for component in self.components:
