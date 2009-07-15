@@ -42,6 +42,11 @@ class GraphNodeComponent(Component):
     # changed
     _key = Any
     
+    padding_left = 5
+    padding_right = 5
+    padding_top = 5
+    padding_bottom = 5
+    
     traits_view = View(Item('value'))
     
     def draw(self, gc, view_bounds=None, mode="default"):
@@ -53,8 +58,6 @@ class GraphNodeComponent(Component):
         
         # update the size to match the text extent.
         x, y, width, height = gc.get_text_extent(self.label)
-        
-        self.padding = [5,5,5,5]
         
         self.width = width + self.padding_left + self.padding_right
         self.height = height + self.padding_bottom + self.padding_top
