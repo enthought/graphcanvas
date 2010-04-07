@@ -31,7 +31,7 @@ INFO = {
         # decide whether to require them or not.
         'nonets': [
             'numpy >= 1.1.0',
-            'networkx',
+            'networkx >= 1.0.1',
             #'PyQt4', -- not really required by everyone.
             #'wxPython', -- not really required by everyone.
             ],
