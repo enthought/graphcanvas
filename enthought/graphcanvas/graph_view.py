@@ -58,7 +58,7 @@ class GraphView(HasTraits):
     def __canvas_default(self):
         """ default setter for _canvas
         """
-        if self.graph.directed:
+        if self.graph.is_directed():
             container = DAGContainer(style=self.layout)
         else:
             container = GraphContainer(style=self.layout)

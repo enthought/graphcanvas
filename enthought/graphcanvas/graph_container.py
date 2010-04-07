@@ -106,8 +106,9 @@ class GraphContainer(Container):
             gc.set_stroke_color((.5,.5,.5))
             
             # TODO: expose weighed parameters
-            if self.graph.weighted:
-                weight = self.graph[edge[0]][edge[1]]
+            attributes = self.graph.get_edge_data(*edge)
+            if 'weight' in attributes:
+                weight = attributes['weight'] 
                 if weight < 0.5:
                     phase = 3 * 2.5;
                     pattern = 3 * numpy.array((5,5))
