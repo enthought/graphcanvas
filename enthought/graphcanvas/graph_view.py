@@ -82,12 +82,19 @@ class GraphView(HasTraits):
     def _graph_changed(self, new):
         """ handler for changes to graph attribute
         """
+        
+        for component in self._canvas.components:
+            component.container = None
+            
+        self._canvas._components = []
+        
         for node in new.nodes():
             # creating a component will automatically add it to the canvas
             GraphNodeComponent(container=self._canvas, value=node)
-                
             
         self._canvas.graph = new
+        self._canvas._graph_layout_needed = True
+        self._canvas.request_redraw()
 
     def _layout_changed(self, new):
         self._canvas.style = new
