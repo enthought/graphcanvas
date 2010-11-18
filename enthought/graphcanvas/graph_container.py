@@ -98,27 +98,71 @@ class GraphContainer(Container):
             component_dict[component.value] = component
             
         # draw the connectors
+        # connectors will always originate on a side
+        # and terminate on the top or bottom
         for edge in self.graph.edges():
             orig = component_dict[edge[0]]
             dest = component_dict[edge[1]]
             
-            gc.save_state()
-            gc.set_stroke_color((.5,.5,.5))
+            if orig.y < dest.y:
+                # up
+                orig_y = orig.y + dest.height/2
+                dest_y = dest.y
+            else:
+                # down
+                orig_y = orig.y + dest.height/2
+                dest_y = dest.y + dest.height
+
+            if orig.x < dest.x:
+                # right
+                orig_x = orig.x + orig.width
+                dest_x = dest.x + dest.width/2
+            else:
+                # left
+                orig_x = orig.x
+                dest_x = dest.x + dest.width/2
+                
+            with gc:    
+                gc.set_stroke_color((.5,.5,.5))
+                gc.set_fill_color((1,1,1,0))                    
+                
+                # TODO: expose weighed parameters
+                attributes = self.graph.get_edge_data(*edge)
+                if 'weight' in attributes:
+                    weight = attributes['weight'] 
+                    if weight < 0.5:
+                        phase = 3 * 2.5;
+                        pattern = 3 * numpy.array((5,5))
+                        gc.set_line_dash(pattern,phase)
+                        gc.set_line_cap(CAP_BUTT)
+    
+                if self.graph.is_directed():
+                    gc.set_fill_color((.5,.5,.5,1))                    
+                    if orig.x < dest.x:
+                        gc.arc(orig_x, orig_y, 3, -numpy.pi/2, numpy.pi/2)
+                    else:
+                        gc.arc(orig_x, orig_y, -3, -numpy.pi/2, numpy.pi/2)
+                    
+                gc.move_to(orig_x, orig_y)
+                gc.line_to(dest_x, dest_y)
+                gc.draw_path()
+
+
+#            if self.graph.is_directed():
+#                line_slope = (dest_y - orig_y)/(dest_x - orig_x) 
+#                line_angle = numpy.arctan(line_slope)
+#                left_angle = line_angle + numpy.pi/4    
+#                right_angle = line_angle - numpy.pi/4
+#                
+#                with gc:
+#                    gc.set_fill_color((1,1,1,0))                    
+#                    gc.move_to(dest_pt[0] - 10*numpy.cos(left_angle), 
+#                               dest_pt[1] - 10*numpy.sin(left_angle))
+#                    gc.line_to(*dest_pt)
+#                    gc.line_to(dest_pt[0] + 10*numpy.cos(right_angle), 
+#                               dest_pt[1] - 10*numpy.sin(right_angle))
+#                    gc.draw_path()
             
-            # TODO: expose weighed parameters
-            attributes = self.graph.get_edge_data(*edge)
-            if 'weight' in attributes:
-                weight = attributes['weight'] 
-                if weight < 0.5:
-                    phase = 3 * 2.5;
-                    pattern = 3 * numpy.array((5,5))
-                    gc.set_line_dash(pattern,phase)
-                    gc.set_line_cap(CAP_BUTT)
-            
-            gc.move_to(orig.x + orig.width/2, orig.y)
-            gc.line_to(dest.x + dest.width/2, dest.y + dest.height)
-            gc.draw_path()
-            gc.restore_state()
             
     def _graph_changed(self, new):
         self._graph_layout_needed = True    
