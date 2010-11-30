@@ -100,6 +100,9 @@ class GraphContainer(Container):
         # draw the connectors
         # connectors will always originate on a side
         # and terminate on the top or bottom
+        
+        line_starts = []
+        line_ends = []
         for edge in self.graph.edges():
             orig = component_dict[edge[0]]
             dest = component_dict[edge[1]]
@@ -121,6 +124,9 @@ class GraphContainer(Container):
                 # left
                 orig_x = orig.x
                 dest_x = dest.x + dest.width/2
+                
+            line_starts.append([orig_x, orig_y])
+            line_ends.append([dest_x, dest_y])
                 
             with gc:    
                 gc.set_stroke_color((.5,.5,.5))
@@ -146,23 +152,30 @@ class GraphContainer(Container):
                 gc.move_to(orig_x, orig_y)
                 gc.line_to(dest_x, dest_y)
                 gc.draw_path()
+                
+        line_starts = numpy.array(line_starts)
+        line_ends = numpy.array(line_ends)
 
 
-#            if self.graph.is_directed():
-#                line_slope = (dest_y - orig_y)/(dest_x - orig_x) 
-#                line_angle = numpy.arctan(line_slope)
-#                left_angle = line_angle + numpy.pi/4    
-#                right_angle = line_angle - numpy.pi/4
-#                
-#                with gc:
-#                    gc.set_fill_color((1,1,1,0))                    
-#                    gc.move_to(dest_pt[0] - 10*numpy.cos(left_angle), 
-#                               dest_pt[1] - 10*numpy.sin(left_angle))
-#                    gc.line_to(*dest_pt)
-#                    gc.line_to(dest_pt[0] + 10*numpy.cos(right_angle), 
-#                               dest_pt[1] - 10*numpy.sin(right_angle))
-#                    gc.draw_path()
+        if self.graph.is_directed():
+            a = 0.707106781   # sqrt(2)/2            
+            vec = line_ends - line_starts
+            unit_vec = vec / numpy.sqrt(vec[:,0] ** 2 + vec[:,1] ** 2)[:, numpy.newaxis]
             
+            with gc:
+                gc.set_fill_color((1,1,1,0))                    
+    
+                # Draw the left arrowhead (for an arrow pointing straight up)
+                arrow_ends = line_ends - numpy.array(unit_vec*numpy.matrix([[a, a], [-a, a]])) * 10
+                gc.begin_path()
+                gc.line_set(line_ends, arrow_ends)
+                gc.stroke_path()
+    
+                # Draw the right arrowhead (for an arrow pointing straight up)
+                arrow_ends = line_ends - numpy.array(unit_vec*numpy.matrix([[a, -a], [a, a]])) * 10
+                gc.begin_path()
+                gc.line_set(line_ends, arrow_ends)
+                gc.stroke_path()
             
     def _graph_changed(self, new):
         self._graph_layout_needed = True    
