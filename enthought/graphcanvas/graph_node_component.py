@@ -7,23 +7,6 @@ from enthought.traits.api import List, Int, Any, Str, cached_property, Property
 from enthought.traits.ui.api import View, Item
 
 
-def get_scale(gc):
-    """  Get the scaling from the ctm.
-    """
-    ctm = gc.get_ctm()
-    if hasattr(ctm, "__len__") and len(ctm) == 6:
-        return sqrt( (ctm[0]+ctm[1]) * (ctm[0]+ctm[1]) / 2.0 + \
-                     (ctm[2]+ctm[3]) * (ctm[2]+ctm[3]) / 2.0 )
-        
-    if hasattr(ctm, "scale"):
-        return gc.get_ctm().scale()
-        
-    if hasattr(gc, "get_ctm_scale"):
-        return gc.get_ctm_scale()
-        
-    raise RuntimeError("Unable to get scale from GC.")
-
-
 class GraphNodeComponent(Component):
     """ An Enable Component which represents a graph node.
     """
@@ -66,9 +49,8 @@ class GraphNodeComponent(Component):
         self._draw_text(gc, view_bounds, mode)
                 
     def _draw_text(self, gc, view_bounds, mode):
-        scale = get_scale(gc)
-        pos = (scale * (self.x + self.padding_left),
-               scale * (self.y2 - 2*self.padding_bottom))
+        pos = (self.x + self.padding_left,
+               self.y2 - 2*self.padding_bottom)
         
         gc.show_text(self.label, pos)
         
