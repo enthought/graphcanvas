@@ -6,24 +6,23 @@ def tree_layout(graph, dim=2, scale=1):
     if dim != 2:
         raise ValueError('currently only 2D graphs are supported')        
     
-    if not graph.directed:
+    if not graph.is_directed():
         raise ValueError('graph must be directed')
     
     
-    tree = networkx.tree.DirectedTree(graph)
-    roots = numpy.array(tree.nodes())[numpy.where(numpy.array(tree.in_degree()) < 1)]
+    roots = numpy.array(graph.nodes())[numpy.where(numpy.array(graph.in_degree()) < 1)]
 
 
     # Find the tree width at every depth in order to layout
     # the nodes in a justified manner 
 
     depths = []
-    for node in tree.nodes():
+    for node in graph.nodes():
         depth = 0
-        parents = tree.predecessors(node)
+        parents = graph.predecessors(node)
         while len(parents) > 0:
             node = parents[0]
-            parents = tree.predecessors(node)
+            parents = graph.predecessors(node)
             depth += 1
         depths.append(depth)
 
@@ -38,7 +37,7 @@ def tree_layout(graph, dim=2, scale=1):
         node_stack = [(0, root)]
         while len(node_stack) > 0:
             curr_depth, curr_node = node_stack.pop()
-            for child in tree.successors(curr_node):
+            for child in graph.successors(curr_node):
                 node_stack.append((curr_depth + 1, child))
 
             # top-down
