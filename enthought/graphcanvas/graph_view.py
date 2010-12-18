@@ -2,7 +2,8 @@ import networkx
 
 from enthought.enable.api import ComponentEditor, Scrolled,Viewport
 from enthought.enable.tools.api import ViewportPanTool
-from enthought.traits.api import HasTraits, Instance, Dict, Any, Enum
+from enthought.traits.api import HasTraits, Instance, Dict, Any, Enum, \
+        on_trait_change, Property, cached_property, List
 from enthought.traits.ui.api import View, Item
 
 from dag_container import DAGContainer
@@ -39,6 +40,7 @@ class GraphView(HasTraits):
 
     # The graph to be visualized
     graph = Instance(networkx.Graph)
+    nodes = Property(List, depends_on='graph')
     
     # How the graph's visualization should be layed out
     layout = Enum('spring', 'tree', 'shell', 'circular')
@@ -78,6 +80,10 @@ class GraphView(HasTraits):
         
         return Scrolled(self._canvas, 
                         viewport_component = viewport)
+        
+    @cached_property
+    def _get_nodes(self):
+        return self.graph.nodes()
     
     def _graph_changed(self, new):
         """ handler for changes to graph attribute
@@ -101,3 +107,7 @@ class GraphView(HasTraits):
 
     def _on_hover(self, label):
         print "hovering over:", label
+
+    @on_trait_change('nodes.+')
+    def node_changed(self, name, obj, old, new):
+        self._canvas.request_redraw()
