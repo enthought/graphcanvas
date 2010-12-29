@@ -3,11 +3,12 @@ from enthought.graphcanvas.api import GraphView
 
 g=networkx.DiGraph()
 
-g.add_edge('a','b',weight=0.6)
-g.add_edge('a','c',weight=0.2)
-g.add_edge('c','d',weight=0.1)
-g.add_edge('c','e',weight=0.7)
-g.add_edge('c','f',weight=0.9)
-g.add_edge('a','d',weight=0.3)
+g.add_edge('root', 'child 1')
+g.add_edge('child 1', 'grandchild 1')
+g.add_edge('child 1', 'grandchild 2')
+g.add_edge('root', 'child 2')
+g.add_edge('child 2', 'grandchild 3')
+g.add_edge('child 2', 'grandchild 4')
+g.add_edge('child 2', 'grandchild 5')
 
 GraphView(graph=g, layout='tree').configure_traits()
