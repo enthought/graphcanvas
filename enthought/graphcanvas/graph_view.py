@@ -57,6 +57,12 @@ class GraphView(HasTraits):
                         height=400,
                         resizable=True)
     
+    def __init__(self, *args, **kw):
+        super(GraphView, self).__init__(*args, **kw)
+        
+        if isinstance(self.graph.nodes()[0], HasTraits):
+            self.on_trait_change(self.node_changed, 'nodes.+')
+    
     def __canvas_default(self):
         """ default setter for _canvas
         """
@@ -108,6 +114,8 @@ class GraphView(HasTraits):
     def _on_hover(self, label):
         print "hovering over:", label
 
-    @on_trait_change('nodes.+')
+#    @on_trait_change('nodes.+')
     def node_changed(self, name, obj, old, new):
+        print "node changed"
         self._canvas.request_redraw()
+        

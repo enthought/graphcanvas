@@ -37,8 +37,8 @@ class GraphContainer(Container):
                 component.y = self.height - max_y + layout[component._key][1]
         
         if self.style == 'tree':
-            layout = tree_layout(self.graph)
-            
+            layout = networkx.pygraphviz_layout(self.graph, prog='dot')
+
             # resize the bounds to fit the graph
             depths = [v[1] for v in layout.values()]
             widths = [depths.count(d) for d in numpy.unique(depths)]
@@ -51,6 +51,9 @@ class GraphContainer(Container):
             for component in self.components:
                 component.x = self.width * layout[component._key][0]
                 component.y = self.height * layout[component._key][1]
+
+            _apply_graphviz_layout(layout)
+                
         elif self.style == 'shell':
             layout = networkx.shell_layout(self.graph)
             

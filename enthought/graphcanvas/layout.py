@@ -9,9 +9,10 @@ def tree_layout(graph, dim=2, scale=1):
     if not graph.is_directed():
         raise ValueError('graph must be directed')
     
-    
+    if not networkx.is_directed_acyclic_graph(graph):
+        raise ValueError('graph must not contain cycles')
+        
     roots = numpy.array(graph.nodes())[numpy.where(numpy.array(graph.in_degree()) < 1)]
-
 
     # Find the tree width at every depth in order to layout
     # the nodes in a justified manner 

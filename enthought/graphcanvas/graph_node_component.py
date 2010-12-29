@@ -4,7 +4,7 @@ from math import sqrt
 from enthought.enable.api import Component
 from enthought.kiva import Font, MODERN
 from enthought.traits.api import List, Int, Any, Str, cached_property, Property
-from enthought.traits.ui.api import View, Item
+from enthought.traits.ui.api import View, Item, spring, HGroup
 
 
 class GraphNodeComponent(Component):
@@ -30,7 +30,11 @@ class GraphNodeComponent(Component):
     padding_top = 5
     padding_bottom = 5
     
-    traits_view = View(Item('value'))
+    traits_view = View(HGroup(
+                           spring, 
+                           Item('value', style='readonly', show_label=False),
+                           spring),
+                        width=200, resizable=True)
     
     def draw(self, gc, view_bounds=None, mode="default"):
         """ Draws the graph node
