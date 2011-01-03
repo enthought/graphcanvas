@@ -73,18 +73,17 @@ class GraphNodeComponent(Component):
         gc.begin_path()
         gc.move_to(x + end_radius, y)
         gc.arc_to(x + self.width, y,
-                x + self.width,
-                y + end_radius, end_radius)
-        gc.arc_to(x + self.width,
-                y + self.height,
-                x + self.width - end_radius,
-                y + self.height, end_radius)
+                x + self.width, y + end_radius,
+                end_radius)
+        gc.arc_to(x + self.width, y + self.height,
+                x + self.width - end_radius, y + self.height,
+                end_radius)
         gc.arc_to(x, y + self.height,
-                x, y,
+                x, y + self.height - end_radius,
                 end_radius)
         gc.arc_to(x, y,
-                x + self.width + end_radius,
-                y, end_radius)
+                x + end_radius, y,
+                end_radius)
         
         gc.linear_gradient(x, y, x, y+100,
                 numpy.array([starting_color, ending_color]),
