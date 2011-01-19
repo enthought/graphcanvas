@@ -2,7 +2,8 @@ import numpy
 from math import sqrt
 
 from enthought.enable.api import Component
-from enthought.kiva import Font, MODERN
+from enthought.kiva.constants import MODERN
+from enthought.kiva.fonttools import Font
 from enthought.traits.api import List, Int, Any, Str, cached_property, Property
 from enthought.traits.ui.api import View, Item, spring, HGroup
 
