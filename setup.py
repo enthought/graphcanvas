@@ -1,8 +1,7 @@
-
 """
 Interactive Graph (network) Visualization
 
-GraphCanvas is an library for interacting with visualizations of complex 
+GraphCanvas is an library for interacting with visualizations of complex
 graphs. The aim is to allow the developer to declare the graph by the
 simplest means and be able to visualize the graph immediately.
 
@@ -19,13 +18,7 @@ Prerequisites
 * `setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_
 """
 
-import os
-import zipfile
-
-from distutils import log
-from distutils.command.build import build as distbuild
-from setuptools import setup, Extension, find_packages
-from setuptools.command.develop import develop
+from setuptools import setup, find_packages
 
 
 # FIXME: This works around a setuptools bug which gets setup_data.py metadata
@@ -37,17 +30,6 @@ INFO = setup_data['INFO']
 
 # Pull the description values for the setup keywords from our file docstring.
 DOCLINES = __doc__.split("\n")
-
-
-class MyDevelop(develop):
-    def run(self):
-        develop.run(self)
-        self.run_command('build_docs')
-
-class MyBuild(distbuild):
-    def run(self):
-        distbuild.run(self)
-        self.run_command('build_docs')
 
 
 # The actual setup call.
@@ -70,12 +52,7 @@ setup(
         Topic :: Software Development
         Topic :: Software Development :: Libraries
         """.splitlines() if len(c.strip()) > 0],
-    cmdclass = {
-        'develop': MyDevelop,
-        'build': MyBuild
-    },
     description = DOCLINES[1],
-    extras_require = INFO['extras_require'],
     ext_modules = [],
     include_package_data = True,
     install_requires = INFO['install_requires'],
@@ -89,7 +66,6 @@ setup(
         ],
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
-    setup_requires = 'setupdocs>=1.0',
     tests_require = [
         'nose >= 0.10.3',
         ],
@@ -97,4 +73,4 @@ setup(
     url = 'http://code.enthought.com/',
     version = INFO['version'],
     zip_safe = False,
-    )
+)
