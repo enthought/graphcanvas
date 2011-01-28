@@ -13,7 +13,7 @@ class InteractiveDemo(HasTraits):
 
     _node_count = Int(0)
 
-    traits_view = View(Item('graph_view', 
+    traits_view = View(Item('graph_view',
                             editor=InstanceEditor(), style='custom',
                             show_label=False),
                        Item('add_button', show_label=False))

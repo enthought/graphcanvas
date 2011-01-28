@@ -2,20 +2,20 @@ import networkx
 import numpy
 
 def tree_layout(graph, dim=2, scale=1):
-    
+
     if dim != 2:
-        raise ValueError('currently only 2D graphs are supported')        
-    
+        raise ValueError('currently only 2D graphs are supported')
+
     if not graph.is_directed():
         raise ValueError('graph must be directed')
-    
+
     if not networkx.is_directed_acyclic_graph(graph):
         raise ValueError('graph must not contain cycles')
-        
+
     roots = numpy.array(graph.nodes())[numpy.where(numpy.array(graph.in_degree()) < 1)]
 
     # Find the tree width at every depth in order to layout
-    # the nodes in a justified manner 
+    # the nodes in a justified manner
 
     depths = []
     for node in graph.nodes():
@@ -31,7 +31,7 @@ def tree_layout(graph, dim=2, scale=1):
     widths = [depths.count(i) for i in range(max_depth+1)]
     max_width = max(widths)
     nodes_positioned_at_depth = [0] * len(widths)
-    
+
     # breadth first tree transversal
     positions = {}
     for root in roots:
@@ -46,11 +46,11 @@ def tree_layout(graph, dim=2, scale=1):
             depth_width = float(widths[curr_depth])
 
             # center align
-            nodes_positioned_at_depth[curr_depth] += 1    
-            width_positions = numpy.linspace(0, 1, depth_width+2) 
+            nodes_positioned_at_depth[curr_depth] += 1
+            width_positions = numpy.linspace(0, 1, depth_width+2)
             draw_width = width_positions[nodes_positioned_at_depth[curr_depth]]
-            
+
             positions[curr_node] = (draw_width, draw_depth)
-                
-    
+
+
     return positions
