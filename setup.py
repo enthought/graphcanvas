@@ -15,7 +15,7 @@ For example::
 Prerequisites
 -------------
 * `NetworkX <http:://networkx.lanl.gov>`_
-* `setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_
+* `distribute <http://pypi.python.org/pypi/distribute>`_
 """
 
 from setuptools import setup, find_packages
