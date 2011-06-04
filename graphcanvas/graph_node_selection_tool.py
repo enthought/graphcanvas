@@ -1,5 +1,5 @@
-from enthought.enable.api import BaseTool
-from enthought.traits.api import HasTraits
+from enable.api import BaseTool
+from traits.api import HasTraits
 
 class GraphNodeSelectionTool(BaseTool):
     """ Listens for double-clicks and tries to open a traits editor on the

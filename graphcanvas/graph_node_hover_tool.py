@@ -1,5 +1,5 @@
-from enthought.enable.tools.api import HoverTool
-from enthought.traits.api import Tuple
+from enable.tools.api import HoverTool
+from traits.api import Tuple
 
 class GraphNodeHoverTool(HoverTool):
     _last_xy = Tuple()

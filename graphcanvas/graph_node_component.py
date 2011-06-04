@@ -1,11 +1,11 @@
 import numpy
 from math import sqrt
 
-from enthought.enable.api import Component
-from enthought.kiva.constants import MODERN
-from enthought.kiva.fonttools import Font
-from enthought.traits.api import List, Int, Any, Str, cached_property, Property
-from enthought.traits.ui.api import View, Item, spring, HGroup
+from enable.api import Component
+from enable.kiva.constants import MODERN
+from enable.kiva.fonttools import Font
+from traits.api import List, Int, Any, Str, cached_property, Property
+from traitsui.api import View, Item, spring, HGroup
 
 
 class GraphNodeComponent(Component):

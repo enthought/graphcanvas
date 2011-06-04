@@ -1,5 +1,5 @@
 import networkx
-from enthought.graphcanvas.api import GraphView
+from graphcanvas.api import GraphView
 
 g=networkx.DiGraph()
 

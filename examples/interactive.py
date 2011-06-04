@@ -1,9 +1,9 @@
 import networkx
 import random
 
-from enthought.graphcanvas.api import GraphView
-from enthought.traits.api import HasTraits, Instance, Int, Button
-from enthought.traits.ui.api import View, Item, InstanceEditor
+from graphcanvas.api import GraphView
+from traits.api import HasTraits, Instance, Int, Button
+from traitsui.api import View, Item, InstanceEditor
 
 
 class InteractiveDemo(HasTraits):

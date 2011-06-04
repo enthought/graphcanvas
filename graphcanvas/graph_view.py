@@ -1,10 +1,10 @@
 import networkx
 
-from enthought.enable.api import ComponentEditor, Scrolled,Viewport
-from enthought.enable.tools.api import ViewportPanTool
-from enthought.traits.api import HasTraits, Instance, Dict, Any, Enum, \
+from enable.api import ComponentEditor, Scrolled,Viewport
+from enable.tools.api import ViewportPanTool
+from traits.api import HasTraits, Instance, Dict, Any, Enum, \
         on_trait_change, Property, cached_property, List
-from enthought.traits.ui.api import View, Item
+from traitsui.api import View, Item
 
 from dag_container import DAGContainer
 from graph_container import GraphContainer

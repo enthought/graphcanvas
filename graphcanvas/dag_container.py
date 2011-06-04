@@ -1,7 +1,7 @@
 import networkx
 
-from enthought.enable.api import Container
-from enthought.traits.api import Instance, Enum
+from enable.api import Container
+from traits.api import Instance, Enum
 
 from graph_container import GraphContainer
 

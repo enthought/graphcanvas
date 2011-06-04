@@ -7,7 +7,7 @@ simplest means and be able to visualize the graph immediately.
 
 For example::
 
-    from enthought.graphcanvas.api import GraphView, graph_from_dict
+    from graphcanvas.api import GraphView, graph_from_dict
     g = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[]}
     GraphView(graph=graph_from_dict(g)).configure_traits()
 
