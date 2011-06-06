@@ -2,8 +2,8 @@ import numpy
 from math import sqrt
 
 from enable.api import Component
-from enable.kiva.constants import MODERN
-from enable.kiva.fonttools import Font
+from kiva.constants import MODERN
+from kiva.fonttools import Font
 from traits.api import List, Int, Any, Str, cached_property, Property
 from traitsui.api import View, Item, spring, HGroup
 

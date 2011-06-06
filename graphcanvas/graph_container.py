@@ -2,7 +2,7 @@ import networkx
 import numpy
 
 from enable.api import Container
-from enable.kiva.constants import CAP_BUTT
+from kiva.constants import CAP_BUTT
 from traits.api import Instance, Enum, Bool, Property
 
 from layout import tree_layout
