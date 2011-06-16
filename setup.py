@@ -1,18 +1,22 @@
+from os.path import join
 from setuptools import setup, find_packages
 
 
-# FIXME: This works around a setuptools bug which gets setup_data.py metadata
-# from incorrect packages. Ticket #1592
-#from setup_data import INFO
-setup_data = dict(__name__='', __file__='setup_data.py')
-execfile('setup_data.py', setup_data)
-INFO = setup_data['INFO']
+info = {}
+execfile(join('graphcanvas', '__init__.py'), info)
 
 
-# The actual setup call.
 setup(
+    name = 'graphcanvas',
+    version = info['__version__'],
     author = 'Bryce Hendrix',
     author_email = 'info@enthought.com',
+    maintainer = 'ETS Developers',
+    maintainer_email = 'enthought-dev@enthought.com',
+    url = 'https://github.com/enthought/graphcanvas',
+     download_url = (
+        'http://www.enthought.com/repo/ets/graphcanvas-%s.tar.gz' %
+        info['__version__']),
     classifiers = [c.strip() for c in """\
         Development Status :: 5 - Production/Stable
         Intended Audience :: Developers
@@ -33,18 +37,9 @@ setup(
     long_description = open('README.rst').read(),
     ext_modules = [],
     include_package_data = True,
-    install_requires = INFO['install_requires'],
+    install_requires = info['__requires__'],
     license = 'BSD',
-    maintainer = 'ETS Developers',
-    maintainer_email = 'enthought-dev@enthought.com',
-    name = INFO['name'],
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
-    tests_require = [
-        'nose >= 0.10.3',
-        ],
-    test_suite = 'nose.collector',
-    url = 'http://code.enthought.com/',
-    version = INFO['version'],
     zip_safe = False,
 )
