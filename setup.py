@@ -14,7 +14,7 @@ setup(
     maintainer = 'ETS Developers',
     maintainer_email = 'enthought-dev@enthought.com',
     url = 'https://github.com/enthought/graphcanvas',
-     download_url = (
+    download_url = (
         'http://www.enthought.com/repo/ets/graphcanvas-%s.tar.gz' %
         info['__version__']),
     classifiers = [c.strip() for c in """\
