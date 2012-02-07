@@ -2,6 +2,7 @@ from os.path import join
 from setuptools import setup, find_packages
 
 
+
 info = {}
 execfile(join('graphcanvas', '__init__.py'), info)
 
