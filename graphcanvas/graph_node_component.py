@@ -55,7 +55,7 @@ class GraphNodeComponent(Component):
 
     def _draw_text(self, gc, view_bounds, mode):
         pos = (self.x + self.padding_left,
-               self.y2 - 2*self.padding_bottom)
+               self.y + self.padding_bottom)
 
         gc.show_text(self.label, pos)
 
