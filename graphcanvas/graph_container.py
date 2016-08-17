@@ -37,7 +37,9 @@ class GraphContainer(Container):
                 component.y = self.height - max_y + layout[component._key][1]
 
         if self.style == 'tree':
-            layout = networkx.pygraphviz_layout(self.graph, prog='dot')
+            layout = networkx.drawing.nx_agraph.pygraphviz_layout(
+                self.graph, prog='dot'
+            )
 
             # resize the bounds to fit the graph
             depths = [v[1] for v in layout.values()]
@@ -65,8 +67,11 @@ class GraphContainer(Container):
             for component in self.components:
                 component.y = self.height * (1 + layout[component._key][0])/2
                 component.x = self.width * (1 + layout[component._key][1])/2
+
         elif self.style == 'circular':
-            layout = networkx.pygraphviz_layout(self.graph, prog='twopi')
+            layout = networkx.drawing.nx_agraph.pygraphviz_layout(
+                self.graph, prog='twopi'
+            )
 
             # resize the bounds to fit the graph
             radius = numpy.log2(len(layout))
