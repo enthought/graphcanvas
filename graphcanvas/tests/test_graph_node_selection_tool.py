@@ -16,6 +16,25 @@ def testable_edit_traits(self, view=None, parent=None,
     raise Exception('edit_traits fired')
 
 
+class UntraitedNode(object):
+    def __init__(self, value, position):
+        self.position = position
+        self.value = value
+
+    def __str__(self):
+        return self.value
+
+    def is_in(self, event_x, event_y):
+        x, y = self.position
+        return all([x == event_x, y == event_y])
+
+    def edit_traits(self, view=None, parent=None,
+                    kind=None, context=None,
+                    handler= None, id= '',
+                    scrollable=None, **args):
+        raise Exception('edit_traits fired')
+
+
 class TestGraphNodeSelectionTool(unittest.TestCase):
     def setUp(self):
         g = networkx.DiGraph()
@@ -46,6 +65,16 @@ class TestGraphNodeSelectionTool(unittest.TestCase):
         event = BasicEvent(x=50, y=50, handled=False)
         ui = self.tool.normal_left_dclick(event)
         self.assertFalse(event.handled)
+
+    def test_untraited_node(self):
+        event = BasicEvent(x=0, y=0, handled=False)
+        self.container.components.pop(0)
+        self.container.components.append(
+            UntraitedNode('untraited_node', [0, 0])
+        )
+
+        with self.assertRaisesRegexp(Exception, 'edit_traits fired'):
+            self.tool.normal_left_dclick(event)
 
 
 if __name__ == '__main__':
