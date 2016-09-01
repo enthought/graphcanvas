@@ -163,23 +163,25 @@ class GraphContainer(Container):
         if self.graph.is_directed():
             a = 0.707106781   # sqrt(2)/2
             vec = line_ends - line_starts
-            if len(vec) > 0:
-                unit_vec = vec / numpy.sqrt(vec[:,0] ** 2 + vec[:,1] ** 2)[:, numpy.newaxis]
+            if len(vec) == 0:
+                return
 
-                with gc:
-                    gc.set_fill_color((1,1,1,0))
+            unit_vec = vec / numpy.sqrt(vec[:,0] ** 2 + vec[:,1] ** 2)[:, numpy.newaxis]
 
-                    # Draw the left arrowhead (for an arrow pointing straight up)
-                    arrow_ends = line_ends - numpy.array(unit_vec*numpy.matrix([[a, a], [-a, a]])) * 10
-                    gc.begin_path()
-                    gc.line_set(line_ends, arrow_ends)
-                    gc.stroke_path()
+            with gc:
+                gc.set_fill_color((1,1,1,0))
 
-                    # Draw the right arrowhead (for an arrow pointing straight up)
-                    arrow_ends = line_ends - numpy.array(unit_vec*numpy.matrix([[a, -a], [a, a]])) * 10
-                    gc.begin_path()
-                    gc.line_set(line_ends, arrow_ends)
-                    gc.stroke_path()
+                # Draw the left arrowhead (for an arrow pointing straight up)
+                arrow_ends = line_ends - numpy.array(unit_vec*numpy.matrix([[a, a], [-a, a]])) * 10
+                gc.begin_path()
+                gc.line_set(line_ends, arrow_ends)
+                gc.stroke_path()
+
+                # Draw the right arrowhead (for an arrow pointing straight up)
+                arrow_ends = line_ends - numpy.array(unit_vec*numpy.matrix([[a, -a], [a, a]])) * 10
+                gc.begin_path()
+                gc.line_set(line_ends, arrow_ends)
+                gc.stroke_path()
 
     def _graph_changed(self, new):
         self._graph_layout_needed = True
