@@ -32,7 +32,7 @@ class UntraitedNode(object):
                     kind=None, context=None,
                     handler= None, id= '',
                     scrollable=None, **args):
-        raise Exception('edit_traits fired')
+        raise Exception('untraited edit_traits fired')
 
 
 class TestGraphNodeSelectionTool(unittest.TestCase):
@@ -73,7 +73,7 @@ class TestGraphNodeSelectionTool(unittest.TestCase):
             UntraitedNode('untraited_node', [0, 0])
         )
 
-        with self.assertRaisesRegexp(Exception, 'edit_traits fired'):
+        with self.assertRaisesRegexp(Exception, 'untraited edit_traits fired'):
             self.tool.normal_left_dclick(event)
 
 
