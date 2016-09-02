@@ -6,6 +6,7 @@ from enable.api import Scrolled, Viewport
 from enable.tools.api import ViewportPanTool, ViewportZoomTool
 
 from graphcanvas.dag_container import DAGContainer
+from graphcanvas.graph_container import GraphContainer
 from graphcanvas.graph_node_selection_tool import GraphNodeSelectionTool
 from graphcanvas.graph_node_hover_tool import GraphNodeHoverTool
 from graphcanvas.graph_view import GraphView, graph_from_dict
@@ -38,6 +39,12 @@ class TestGraphView(unittest.TestCase):
         self.assertEquals(len(tools), 2)
         self.assertIsInstance(tools[0], GraphNodeSelectionTool)
         self.assertIsInstance(tools[1], GraphNodeHoverTool)
+
+    def test_undirected_canvas(self):
+        undir_g = self.g.to_undirected()
+        undir_view = GraphView(graph=undir_g)
+        self.assertIsInstance(undir_view._canvas, GraphContainer)
+        self.assertNotIsInstance(undir_view._canvas, DAGContainer)
 
     def test_container(self):
         container = self.view._container
