@@ -9,7 +9,7 @@ from graphcanvas.graph_node_component import GraphNodeComponent
 from traitsui.api import Handler
 
 
-def testable_edit_traits(self, view=None, parent=None,
+def assertable_edit_traits(self, view=None, parent=None,
                          kind=None, context=None,
                          handler= None, id= '',
                          scrollable=None, **args):
@@ -53,7 +53,7 @@ class TestGraphNodeSelectionTool(unittest.TestCase):
 
         # monkey-patch edit_traits method to something testable
         original_edit_traits = GraphNodeComponent.edit_traits
-        GraphNodeComponent.edit_traits = testable_edit_traits
+        GraphNodeComponent.edit_traits = assertable_edit_traits
 
         with self.assertRaisesRegexp(Exception, 'edit_traits fired'):
             self.tool.normal_left_dclick(event)
