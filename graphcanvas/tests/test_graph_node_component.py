@@ -1,7 +1,10 @@
 import string
 import unittest
 
+from enable.kiva_graphics_context import GraphicsContext
 from graphcanvas.graph_node_component import GraphNodeComponent
+from kiva.constants import MODERN
+from kiva.fonttools import Font
 
 
 class NodeTester(object):
@@ -44,6 +47,18 @@ class TestGraphNodeComponent(unittest.TestCase):
         node.value = test_value
         self.assertTrue(node._key is node.value)
         self.assertTrue(node._key is test_value)
+
+    def test_draw(self):
+        node = self.node
+        node.value = NodeTester(label=string.ascii_lowercase)
+        gc = GraphicsContext((50, 50))
+        font = Font(family=MODERN)
+        gc.set_font(font)
+        x, y, width, height = gc.get_text_extent(node.label)
+        expected_paddings = 5
+        node.draw(gc)
+        self.assertEqual(node.width, width + expected_paddings * 2)
+        self.assertEqual(node.height, height + expected_paddings * 2)
 
 
 if __name__ == '__main__':
