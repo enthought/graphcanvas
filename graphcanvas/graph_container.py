@@ -69,6 +69,7 @@ class GraphContainer(Container):
             for component in self.components:
                 component.y = self.height * (1 + layout[component._key][0])/2
                 component.x = self.width * (1 + layout[component._key][1])/2
+
         elif self.style == 'circular':
             layout = networkx.drawing.nx_agraph.pygraphviz_layout(
                 self.graph, prog='twopi'
@@ -80,6 +81,7 @@ class GraphContainer(Container):
                            max(50, self.components[0].height)*2*radius]
 
             _apply_graphviz_layout(layout)
+
         else:
             layout = networkx.spring_layout(self.graph)
 
