@@ -102,6 +102,28 @@ class TestGraphContainer(unittest.TestCase):
         # drawn there
         self.assert_components_drawn(container)
 
+    def test_draw_directed_arrow_direction(self):
+        d = {'a':['b'], 'b':[]}
+        g = graph_from_dict(d)
+        container = GraphContainer(graph=g)
+        for node in g.nodes():
+            GraphNodeComponent(container=container, value=node)
+        gc = GraphicsContext(tuple(container.bounds))
+
+        # Node a is to the left of node b
+        container._layout_needed = False
+        container.components[0].x = 0.0
+        container.components[1].x = 100.0
+        container.draw(gc)
+        self.assert_components_drawn(container)
+
+        # Node a is to the right of node b
+        container._layout_needed = False
+        container.components[0].x = 100.0
+        container.components[1].x = 0.0
+        container.draw(gc)
+        self.assert_components_drawn(container)
+
     def test_draw_no_layout(self):
         container = self.create_graph_container()
         gc = GraphicsContext(tuple(container.bounds))
