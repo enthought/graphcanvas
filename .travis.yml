@@ -26,8 +26,5 @@ install:
   - python setup.py develop
 script:
   - coverage run -m haas -v
-notifications:
-  email:
-    - travis-ci@enthought.com
 after_success:
   - coverage report
