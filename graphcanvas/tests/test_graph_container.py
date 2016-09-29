@@ -143,7 +143,6 @@ class TestGraphContainer(unittest.TestCase):
         self.assert_components_drawn(container)
 
     def test_no_pygraphviz(self):
-        import networkx
         # monkey-patch pygraphviz_layout to raise ImportError
         def fake_pygraphviz_layout(graph, prog):
             raise ImportError
