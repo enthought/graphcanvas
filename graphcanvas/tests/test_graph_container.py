@@ -158,3 +158,7 @@ class TestGraphContainer(unittest.TestCase):
 
         # put back the real pygraphviz_layout
         networkx.drawing.nx_agraph.pygraphviz_layout = real_pygraphviz_layout
+
+
+if __name__ == '__main__':
+    unittest.main()
