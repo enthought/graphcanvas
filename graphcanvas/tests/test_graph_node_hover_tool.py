@@ -62,6 +62,27 @@ class TestGraphNodeHoverTool(unittest.TestCase):
         sys.stdout.close()
         sys.stdout = stdout
 
+    def test_on_hover_no_callback(self):
+        g = networkx.DiGraph()
+        container = GraphContainer(graph=g)
+        tool = GraphNodeHoverTool(component=container, callback=None)
+        container.tools.append(tool)
+        container.components.append(
+            GraphNodeComponent(position=[0, 0],
+                               value='test')
+        )
+
+        # test in
+        tool._last_xy = (0, 0)
+        # capture stdout
+        stdout = sys.stdout
+        sys.stdout = result = StringIO()
+        tool.on_hover()
+        self.assertEqual(result.getvalue(), '')
+        # put back original stdout
+        sys.stdout.close()
+        sys.stdout = stdout
+
 
 if __name__ == '__main__':
     unittest.main()
