@@ -70,7 +70,9 @@ class GraphContainer(Container):
                 component.y = self.height * (1 + layout[component._key][0])/2
                 component.x = self.width * (1 + layout[component._key][1])/2
         elif self.style == 'circular':
-            layout = networkx.pygraphviz_layout(self.graph, prog='twopi')
+            layout = networkx.drawing.nx_agraph.pygraphviz_layout(
+                self.graph, prog='twopi'
+            )
 
             # resize the bounds to fit the graph
             radius = numpy.log2(len(layout))
