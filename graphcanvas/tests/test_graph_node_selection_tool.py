@@ -1,3 +1,5 @@
+from StringIO import StringIO
+import sys
 import unittest
 
 import networkx
@@ -6,6 +8,7 @@ from enable.api import BasicEvent, Interactor
 from graphcanvas.graph_node_selection_tool import GraphNodeSelectionTool
 from graphcanvas.graph_container import GraphContainer
 from graphcanvas.graph_node_component import GraphNodeComponent
+from traits.api import HasTraits, Str
 from traitsui.api import Handler
 
 
@@ -13,7 +16,31 @@ def assertable_edit_traits(self, view=None, parent=None,
                          kind=None, context=None,
                          handler= None, id= '',
                          scrollable=None, **args):
-    raise Exception('edit_traits fired')
+    print 'edit_traits fired'
+
+
+class TraitedNodeValue(HasTraits):
+    label = Str
+
+    def edit_traits(self, view=None, parent=None,
+                    kind=None, context=None,
+                    handler= None, id= '',
+                    scrollable=None, **args):
+        print 'traited node edit_traits fired'
+
+
+class TraitedNode(object):
+    def __init__(self, value, position):
+        self.position = position
+        self.value = value
+
+    def __str__(self):
+        return self.value
+
+    def is_in(self, event_x, event_y):
+        x, y = self.position
+        return all([x == event_x, y == event_y])
+
 
 
 class UntraitedNode(object):
@@ -32,7 +59,7 @@ class UntraitedNode(object):
                     kind=None, context=None,
                     handler= None, id= '',
                     scrollable=None, **args):
-        raise Exception('untraited edit_traits fired')
+        print 'untraited edit_traits fired'
 
 
 class TestGraphNodeSelectionTool(unittest.TestCase):
@@ -55,8 +82,12 @@ class TestGraphNodeSelectionTool(unittest.TestCase):
         original_edit_traits = GraphNodeComponent.edit_traits
         GraphNodeComponent.edit_traits = assertable_edit_traits
 
-        with self.assertRaisesRegexp(Exception, 'edit_traits fired'):
-            self.tool.normal_left_dclick(event)
+        stdout = sys.stdout
+        sys.stdout = result = StringIO()
+        self.tool.normal_left_dclick(event)
+        self.assertEqual(result.getvalue(), 'edit_traits fired\n')
+        sys.stdout.close()
+        sys.stdout = stdout
 
         # put the original edit_traits method back
         GraphNodeComponent.edit_traits = original_edit_traits
@@ -72,9 +103,25 @@ class TestGraphNodeSelectionTool(unittest.TestCase):
         self.container.components.append(
             UntraitedNode('untraited_node', [0, 0])
         )
+        stdout = sys.stdout
+        sys.stdout = result = StringIO()
+        self.tool.normal_left_dclick(event)
+        self.assertEqual(result.getvalue(), 'untraited edit_traits fired\n')
+        sys.stdout.close()
+        sys.stdout = stdout
 
-        with self.assertRaisesRegexp(Exception, 'untraited edit_traits fired'):
-            self.tool.normal_left_dclick(event)
+    def test_traited_node(self):
+        event = BasicEvent(x=0, y=0, handled=False)
+        self.container.components.pop(0)
+        self.container.components.append(
+            TraitedNode(TraitedNodeValue(label='traited_node'), [0, 0])
+        )
+        stdout = sys.stdout
+        sys.stdout = result = StringIO()
+        self.tool.normal_left_dclick(event)
+        self.assertEqual(result.getvalue(), 'traited node edit_traits fired\n')
+        sys.stdout.close()
+        sys.stdout = stdout
 
 
 if __name__ == '__main__':
