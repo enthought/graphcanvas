@@ -1,7 +1,6 @@
-from StringIO import StringIO
-import sys
 import unittest
 
+import mock
 import networkx
 
 from enable.api import Scrolled, Viewport
@@ -85,14 +84,18 @@ class TestGraphView(unittest.TestCase):
         self.assertListEqual(view.nodes, new_g.nodes())
 
     def test_on_hover(self):
-        expected = 'test'
-        stdout = sys.stdout
-        sys.stdout = result = StringIO()
-        self.view._on_hover('test')
-        self.assertEqual(result.getvalue(), 'hovering over: test\n')
-        # put back original stdout
-        sys.stdout.close()
-        sys.stdout = stdout
+        view = GraphView(graph=graph_from_dict({'test':['test1']}))
+        view._on_hover = mock.Mock()
+        view._canvas.tools.pop(-1)
+        hover_tool = GraphNodeHoverTool(
+            component=view._canvas, callback=view._on_hover
+        )
+        view._canvas.tools.append(hover_tool)
+        hover_tool._last_xy = (0, 0)
+        hover_tool.on_hover()
+        self.assertEqual(view._on_hover.call_count, 2)
+        self.assertEqual(view._on_hover.call_args_list,
+                         [mock.mock.call('test'), mock.mock.call('test1')])
 
     def test_node_changed(self):
         a = DummyHasTraitsObject(label='a')
@@ -101,13 +104,10 @@ class TestGraphView(unittest.TestCase):
         d = {a: [b], b: [c], c: []}
         g = graph_from_dict(d)
         view = GraphView(graph=g, layout='spring')
+        view.node_changed = mock.Mock()
 
-        stdout = sys.stdout
-        sys.stdout = result = StringIO()
         a.label = 'test'
-        self.assertEqual(result.getvalue(), 'node changed\n')
-        sys.stdout.close()
-        sys.stdout = stdout
+        view.node_changed.assert_called_once_with(a, 'label', 'a', 'test')
 
 if __name__ == '__main__':
     unittest.main()
