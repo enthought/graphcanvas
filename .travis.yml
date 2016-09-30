@@ -12,6 +12,13 @@ addons:
     packages:
     - swig
     - ccache
+    - python-numpy
+    - libjpeg8-dev
+    - zlib1g-dev
+    - libpng-dev
+    - libfreetype36-dev
+    - cmake
+    - swig
 
 cache:
   pip: true
