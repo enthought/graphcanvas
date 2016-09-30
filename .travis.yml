@@ -16,9 +16,7 @@ addons:
     - libjpeg8-dev
     - zlib1g-dev
     - libpng-dev
-    - libfreetype36-dev
     - cmake
-    - pillow
     - swig
     - python-qt4
     - python-qt4-gl
