@@ -31,6 +31,7 @@ cache:
 before_install:
   - ccache -s
   - export PATH=/usr/lib/ccache:${PATH}
+  - export ETS_TOOLKIT='qt4'
   - pip install --upgrade pip
 
 install:
