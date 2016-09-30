@@ -1,3 +1,8 @@
 networkx
 haas
 coverage
+numpy
+pillow
+git+http://github.com/nucleic/kiwi.git#egg=kiwi
+git+http://github.com/enthought/traits.git#egg=traits
+git+http://github.com/enthought/enable.git#egg=enable
