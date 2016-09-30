@@ -1,3 +1,4 @@
+from StringIO import StringIO
 import unittest
 
 import mock
@@ -83,31 +84,26 @@ class TestGraphView(unittest.TestCase):
         view.graph = new_g
         self.assertListEqual(view.nodes, new_g.nodes())
 
-    def test_on_hover(self):
+    @mock.patch('sys.stdout', new_callable=StringIO)
+    def test_on_hover(self, mock_stdout):
         view = GraphView(graph=graph_from_dict({'test':['test1']}))
-        view._on_hover = mock.Mock()
-        view._canvas.tools.pop(-1)
-        hover_tool = GraphNodeHoverTool(
-            component=view._canvas, callback=view._on_hover
-        )
-        view._canvas.tools.append(hover_tool)
+        hover_tool = view._canvas.tools[-1]
         hover_tool._last_xy = (0, 0)
         hover_tool.on_hover()
-        self.assertEqual(view._on_hover.call_count, 2)
-        self.assertEqual(view._on_hover.call_args_list,
-                         [mock.mock.call('test'), mock.mock.call('test1')])
+        self.assertEqual(mock_stdout.getvalue(),
+                         'hovering over: test\nhovering over: test1\n')
 
-    def test_node_changed(self):
+    @mock.patch('sys.stdout', new_callable=StringIO)
+    def test_node_changed(self, mock_stdout):
         a = DummyHasTraitsObject(label='a')
         b = DummyHasTraitsObject(label='b')
         c = DummyHasTraitsObject(label='c')
         d = {a: [b], b: [c], c: []}
         g = graph_from_dict(d)
         view = GraphView(graph=g, layout='spring')
-        view.node_changed = mock.Mock()
 
         a.label = 'test'
-        view.node_changed.assert_called_once_with(a, 'label', 'a', 'test')
+        self.assertEqual(mock_stdout.getvalue(), 'node changed\n')
 
 if __name__ == '__main__':
     unittest.main()
