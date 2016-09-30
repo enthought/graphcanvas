@@ -18,7 +18,11 @@ addons:
     - libpng-dev
     - libfreetype36-dev
     - cmake
+    - pillow
     - swig
+    - python-qt4
+    - python-qt4-gl
+    - python-qt4-dev
 
 cache:
   pip: true
