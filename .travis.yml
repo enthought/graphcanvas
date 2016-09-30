@@ -23,6 +23,10 @@ before_install:
   - pip install --upgrade pip
 install:
   - pip install --upgrade -r travis-ci-requirements.txt
+  - git clone https://github.com/enthought/enable.git
+  - cd enable
+  - python setup.py develop
+  - cd ..
   - python setup.py develop
 script:
   - coverage run -m haas -v
