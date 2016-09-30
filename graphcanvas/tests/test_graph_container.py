@@ -24,10 +24,12 @@ class TestGraphContainer(unittest.TestCase):
             within the bounds of the container.
         """
         upper_x, upper_y = container.bounds
-        lower_x, lower_y = (0, 0)
+        lower_x, lower_y = 0, 0
         for component in container.components:
-            self.assertTrue(lower_x <= component.x <= upper_x)
-            self.assertTrue(lower_y <= component.y <= upper_y)
+            self.assertGreaterEqual(upper_x, component.x)
+            self.assertGreaterEqual(component.x, lower_x)
+            self.assertGreaterEqual(upper_y, component.y)
+            self.assertGreaterEqual(component.y, lower_y)
 
     def assert_components_drawn(self, container):
         """ Utility method for asserting that all components are found where
@@ -48,26 +50,25 @@ class TestGraphContainer(unittest.TestCase):
                 component.x + x_padding,
                 component.y + y_padding
             )
-            self.assertTrue(
-                 components_at_list == [component]
-            )
+            self.assertEqual(components_at_list, [component])
 
     def test_no_layout_needed(self):
         container = self.create_graph_container()
         container._graph_layout_needed = False
         result = container.do_layout()
-        self.assertTrue(result is None)
+        self.assertIsNone(result)
 
     def test_no_nodes(self):
         container = GraphContainer(graph=graph_from_dict({}))
         self.assertTrue(container.components == [])
         result = container.do_layout()
-        self.assertTrue(result is None)
+        self.assertIsNone(result)
 
     def test_do_layout(self):
         container = self.create_graph_container()
         # test spring layout
         container.style = 'spring'
+        self.assertTrue(container._graph_layout_needed)
         container.do_layout()
         self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
@@ -75,6 +76,7 @@ class TestGraphContainer(unittest.TestCase):
         # test tree layout
         container = self.create_graph_container()
         container.style = 'tree'
+        self.assertTrue(container._graph_layout_needed)
         container.do_layout()
         self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
@@ -82,6 +84,7 @@ class TestGraphContainer(unittest.TestCase):
         # test shell layout
         container = self.create_graph_container()
         container.style = 'shell'
+        self.assertTrue(container._graph_layout_needed)
         container.do_layout()
         self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
@@ -89,6 +92,7 @@ class TestGraphContainer(unittest.TestCase):
         # test circular layout
         container = self.create_graph_container()
         container.style = 'circular'
+        self.assertTrue(container._graph_layout_needed)
         container.do_layout()
         self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
@@ -133,9 +137,7 @@ class TestGraphContainer(unittest.TestCase):
         container.draw(gc)
         # test that all components are at (0, 0)
         zero_zero_list = container.components_at(0, 0)
-        self.assertTrue(
-            all([(comp in container.components) for comp in zero_zero_list])
-        )
+        self.assertItemsEqual(container.components, zero_zero_list)
 
     def test_draw_not_directed(self):
         d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[]}

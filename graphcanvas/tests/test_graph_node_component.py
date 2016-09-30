@@ -38,15 +38,14 @@ class TestGraphNodeComponent(unittest.TestCase):
         node.value = NodeTester(label=string.ascii_lowercase)
         expected_label = string.ascii_lowercase[:17] + '...'
         result = node.label
-        self.assertEqual(len(result), 20)
         self.assertEqual(expected_label, result)
 
     def test__key(self):
         node = self.node
         test_value = {'key': 'value'}
         node.value = test_value
-        self.assertTrue(node._key is node.value)
-        self.assertTrue(node._key is test_value)
+        self.assertIs(node._key, node.value)
+        self.assertIs(node._key, test_value)
 
     def test_draw(self):
         node = self.node

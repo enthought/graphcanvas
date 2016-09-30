@@ -33,12 +33,11 @@ class TestGraphFromDict(unittest.TestCase):
 class TestGraphView(unittest.TestCase):
 
     def setUp(self):
-        self.d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']}
-        self.g = graph_from_dict(self.d)
+        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']}
+        self.g = graph_from_dict(d)
         self.view = GraphView(graph=self.g, layout='spring')
 
     def tearDown(self):
-        del self.d
         del self.g
         del self.view
 
