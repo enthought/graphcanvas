@@ -1,5 +1,6 @@
 import unittest
 
+import mock
 import networkx
 
 from graphcanvas.graph_container import GraphContainer
@@ -166,22 +167,17 @@ class TestGraphContainer(unittest.TestCase):
         container.draw(gc)
         self.assert_components_drawn(container)
 
-    def test_no_pygraphviz(self):
-        # monkey-patch pygraphviz_layout to raise ImportError
-        def fake_pygraphviz_layout(graph, prog):
-            raise ImportError
-
-        real_pygraphviz_layout = networkx.drawing.nx_agraph.pygraphviz_layout
-        networkx.drawing.nx_agraph.pygraphviz_layout = fake_pygraphviz_layout
-
+    @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout',
+                side_effect=ImportError)
+    def test_no_pygraphviz(self, mock_pygraphviz_layout):
         container = self.create_graph_container()
         container.style = 'tree'
         container.do_layout()
         self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
-
-        # put back the real pygraphviz_layout
-        networkx.drawing.nx_agraph.pygraphviz_layout = real_pygraphviz_layout
+        mock_pygraphviz_layout.assert_called_once_with(
+            container.graph, prog='dot'
+        )
 
 
 if __name__ == '__main__':
