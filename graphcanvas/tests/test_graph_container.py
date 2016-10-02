@@ -6,9 +6,9 @@ import networkx
 from graphcanvas.graph_container import GraphContainer
 from graphcanvas.graph_node_component import GraphNodeComponent
 from graphcanvas.graph_view import graph_from_dict
-from kiva.image import GraphicsContext
+from kiva.testing import KivaTestAssistant
 
-class TestGraphContainer(unittest.TestCase):
+class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
     def create_graph_container(self):
         """ Utility method to generate a GraphContainer with a simple graph for
             re-use in several tests herein.
@@ -31,27 +31,6 @@ class TestGraphContainer(unittest.TestCase):
             self.assertGreaterEqual(component.x, lower_x)
             self.assertGreaterEqual(upper_y, component.y)
             self.assertGreaterEqual(component.y, lower_y)
-
-    def assert_components_drawn(self, container):
-        """ Utility method for asserting that all components are found where
-            they are expected.
-        """
-        for component in container.components:
-            x_padding = 0
-            y_padding = 0
-            if component.x == 0:
-                x_padding = component.padding_left
-            elif component.x == container.bounds[0]:
-                x_padding = -component.padding_right
-            if component.y == 0:
-                y_padding = component.padding_bottom
-            elif component.y == container.bounds[1]:
-                y_padding = -component.padding_top
-            components_at_list = container.components_at(
-                component.x + x_padding,
-                component.y + y_padding
-            )
-            self.assertEqual(components_at_list, [component])
 
     def test_no_layout_needed(self):
         container = self.create_graph_container()
@@ -100,12 +79,7 @@ class TestGraphContainer(unittest.TestCase):
 
     def test_draw(self):
         container = self.create_graph_container()
-        gc = GraphicsContext(tuple(container.bounds))
-        # draw the contents of the container
-        container.draw(gc)
-        # find the expected position of each component and test that it is
-        # drawn there
-        self.assert_components_drawn(container)
+        self.assertPathsAreCreated(container)
 
     def test_draw_directed_arrow_direction(self):
         d = {'a':['b'], 'b':[]}
@@ -113,32 +87,23 @@ class TestGraphContainer(unittest.TestCase):
         container = GraphContainer(graph=g)
         for node in g.nodes():
             GraphNodeComponent(container=container, value=node)
-        gc = GraphicsContext(tuple(container.bounds))
 
         # Node a is to the left of node b
         container._layout_needed = False
         container.components[0].x = 0.0
         container.components[1].x = 100.0
-        container.draw(gc)
-        self.assert_components_drawn(container)
+        self.assertPathsAreCreated(container)
 
         # Node a is to the right of node b
         container._layout_needed = False
         container.components[0].x = 100.0
         container.components[1].x = 0.0
-        container.draw(gc)
-        self.assert_components_drawn(container)
+        self.assertPathsAreCreated(container)
 
     def test_draw_no_layout(self):
         container = self.create_graph_container()
-        gc = GraphicsContext(tuple(container.bounds))
-        # set _layout_needed to False
         container._layout_needed = False
-        # draw the contents of the container
-        container.draw(gc)
-        # test that all components are at (0, 0)
-        zero_zero_list = container.components_at(0, 0)
-        self.assertItemsEqual(container.components, zero_zero_list)
+        self.assertPathsAreCreated(container)
 
     def test_draw_not_directed(self):
         d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[]}
@@ -147,9 +112,7 @@ class TestGraphContainer(unittest.TestCase):
         container = GraphContainer(graph=g)
         for node in g.nodes():
             GraphNodeComponent(container=container, value=node)
-        gc = GraphicsContext(tuple(container.bounds))
-        container.draw(gc)
-        self.assert_components_drawn(container)
+        self.assertPathsAreCreated(container)
 
     def test_weighted(self):
         g = networkx.Graph()
@@ -162,14 +125,12 @@ class TestGraphContainer(unittest.TestCase):
         container = GraphContainer(graph=g)
         for node in g.nodes():
             GraphNodeComponent(container=container, value=node)
-        gc = GraphicsContext(tuple(container.bounds))
+        self.assertPathsAreCreated(container)
 
-        container.draw(gc)
-        self.assert_components_drawn(container)
-
-    @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout',
-                side_effect=ImportError)
-    def test_no_pygraphviz(self, mock_pygraphviz_layout):
+    @mock.patch('graphcanvas.layout.tree_layout')
+    @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout')
+    def test_no_pygraphviz(self, mock_pygraphviz_layout, mock_tree_layout):
+        mock_pygraphviz_layout.side_effect = ImportError()
         container = self.create_graph_container()
         container.style = 'tree'
         container.do_layout()
