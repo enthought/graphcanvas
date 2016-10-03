@@ -37,24 +37,26 @@ class GraphContainer(Container):
                 component.y = self.height - max_y + layout[component._key][1]
 
         if self.style == 'tree':
-            layout = networkx.drawing.nx_agraph.pygraphviz_layout(
-                self.graph, prog='dot'
-            )
+            try:
+                layout = networkx.drawing.nx_agraph.pygraphviz_layout(
+                    self.graph, prog='dot'
+                )
+                _apply_graphviz_layout(layout)
+            except ImportError:
+                layout = tree_layout(self.graph)
 
-            # resize the bounds to fit the graph
-            depths = [v[1] for v in layout.values()]
-            widths = [depths.count(d) for d in numpy.unique(depths)]
-            max_width = max(widths)
-            max_depth = len(widths)
+                # resize the bounds to fit the graph
+                depths = [v[1] for v in layout.values()]
+                widths = [depths.count(d) for d in numpy.unique(depths)]
+                max_width = max(widths)
+                max_depth = len(widths)
 
-            self.bounds = [max(75, self.components[0].width)*max_width,
-                           max(50, self.components[0].height)*max_depth]
+                self.bounds = [max(75, self.components[0].width)*max_width,
+                               max(50, self.components[0].height)*max_depth]
 
-            for component in self.components:
-                component.x = self.width * layout[component._key][0]
-                component.y = self.height * layout[component._key][1]
-
-            _apply_graphviz_layout(layout)
+                for component in self.components:
+                    component.x = self.width * layout[component._key][0]
+                    component.y = self.height * layout[component._key][1]
 
         elif self.style == 'shell':
             layout = networkx.shell_layout(self.graph)
@@ -79,6 +81,7 @@ class GraphContainer(Container):
                            max(50, self.components[0].height)*2*radius]
 
             _apply_graphviz_layout(layout)
+
         else:
             layout = networkx.spring_layout(self.graph)
 
