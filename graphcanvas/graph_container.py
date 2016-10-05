@@ -44,22 +44,26 @@ class GraphContainer(Container):
         scale = min(self.bounds)
 
         if self.style == 'tree':
-            layout = networkx.pygraphviz_layout(self.graph, prog='dot')
+            try:
+                layout = networkx.drawing.nx_agraph.pygraphviz_layout(
+                    self.graph, prog='dot'
+                )
+                _apply_graphviz_layout(layout)
+            except ImportError:
+                layout = tree_layout(self.graph)
 
-            # resize the bounds to fit the graph
-            depths = [v[1] for v in layout.values()]
-            widths = [depths.count(d) for d in numpy.unique(depths)]
-            max_width = max(widths)
-            max_depth = len(widths)
+                # resize the bounds to fit the graph
+                depths = [v[1] for v in layout.values()]
+                widths = [depths.count(d) for d in numpy.unique(depths)]
+                max_width = max(widths)
+                max_depth = len(widths)
 
-            self.bounds = [max(75, self.components[0].width)*max_width,
-                           max(50, self.components[0].height)*max_depth]
+                self.bounds = [max(75, self.components[0].width)*max_width,
+                               max(50, self.components[0].height)*max_depth]
 
-            for component in self.components:
-                component.x = self.width * layout[component._key][0]
-                component.y = self.height * layout[component._key][1]
-
-            _apply_graphviz_layout(layout)
+                for component in self.components:
+                    component.x = self.width * layout[component._key][0]
+                    component.y = self.height * layout[component._key][1]
 
         elif self.style == 'shell':
             layout = networkx.shell_layout(self.graph)
@@ -72,6 +76,7 @@ class GraphContainer(Container):
             for component in self.components:
                 component.y = self.height * (1 + layout[component._key][0])/2
                 component.x = self.width * (1 + layout[component._key][1])/2
+
         elif self.style == 'spectral':
             layout = networkx.spectral_layout(self.graph)
 
@@ -83,8 +88,11 @@ class GraphContainer(Container):
             for component in self.components:
                 component.y = self.height * (1 + layout[component._key][0])/2
                 component.x = self.width * (1 + layout[component._key][1])/2
+
         elif self.style == 'circular':
-            layout = networkx.circular_layout(self.graph, prog='twopi')
+            layout = networkx.drawing.nx_agraph.pygraphviz_layout(
+                self.graph, prog='twopi'
+            )
 
             # resize the bounds to fit the graph
             radius = numpy.log2(len(layout))
@@ -92,6 +100,7 @@ class GraphContainer(Container):
                            max(50, self.components[0].height)*2*radius]
 
             _apply_graphviz_layout(layout)
+
         else:
             layout = networkx.spring_layout(self.graph, pos=initial_positions, scale=scale)
 
