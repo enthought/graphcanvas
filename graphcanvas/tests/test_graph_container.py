@@ -69,6 +69,14 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
 
+        # test spectral layout
+        container = self.create_graph_container()
+        container.style = 'spectral'
+        self.assertTrue(container._graph_layout_needed)
+        container.do_layout()
+        self.assert_in_bounds(container)
+        self.assertFalse(container._graph_layout_needed)
+
         # test circular layout
         container = self.create_graph_container()
         container.style = 'circular'
