@@ -43,7 +43,7 @@ class GraphView(HasTraits):
     nodes = Property(List, depends_on='graph')
 
     # How the graph's visualization should be layed out
-    layout = Enum('spring', 'tree', 'shell', 'circular')
+    layout = Enum('spring', 'tree', 'shell', 'circular', 'spectral')
 
     # Scrolled contained which holds the canvas in a viewport
     _container = Instance(Scrolled)
