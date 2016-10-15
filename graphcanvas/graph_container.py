@@ -102,13 +102,16 @@ class GraphContainer(Container):
             _apply_graphviz_layout(layout)
 
         else:
-            layout = networkx.spring_layout(self.graph, pos=initial_positions, scale=scale)
+            layout = networkx.spring_layout(
+                self.graph,
+                pos=initial_positions,
+                scale=scale,
+            )
 
             # resize the bounds to fit the graph
-            radius = numpy.log2(len(layout))
+            radius = len(layout)
             self.bounds = [max(75, self.components[0].width)*2*radius,
                            max(50, self.components[0].height)*2*radius]
-            print self.bounds
 
             for component in self.components:
                 component.x = layout[component._key][0]
