@@ -100,12 +100,32 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         container._layout_needed = False
         container.components[0].x = 0.0
         container.components[1].x = 100.0
+        container.components[0].y = 0.0
+        container.components[1].y = 0.0
         self.assertPathsAreCreated(container)
 
         # Node a is to the right of node b
         container._layout_needed = False
         container.components[0].x = 100.0
         container.components[1].x = 0.0
+        container.components[0].y = 0.0
+        container.components[1].y = 0.0
+        self.assertPathsAreCreated(container)
+
+        # Node a is above of node b
+        container._layout_needed = False
+        container.components[0].x = 0.0
+        container.components[1].x = 0.0
+        container.components[0].y = 0.0
+        container.components[1].y = 100.0
+        self.assertPathsAreCreated(container)
+
+        # Node a is below of node b
+        container._layout_needed = False
+        container.components[0].x = 0.0
+        container.components[1].x = 0.0
+        container.components[0].y = 100.0
+        container.components[1].y = 0.0
         self.assertPathsAreCreated(container)
 
     def test_draw_no_layout(self):
@@ -134,6 +154,16 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         for node in g.nodes():
             GraphNodeComponent(container=container, value=node)
         self.assertPathsAreCreated(container)
+
+    def test_spring_layout_with_non_zero_initial_positions(self):
+        container = self.create_graph_container()
+        for component in container.components:
+            component.position = [1.0, 2.0]
+        container.style = 'spring'
+        self.assertTrue(container._graph_layout_needed)
+        container.do_layout()
+        self.assert_in_bounds(container)
+        self.assertFalse(container._graph_layout_needed)
 
     @mock.patch('graphcanvas.layout.tree_layout')
     @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout')
