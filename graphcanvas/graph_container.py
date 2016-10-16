@@ -7,6 +7,9 @@ from traits.api import Instance, Enum, Bool, Property
 
 from layout import tree_layout
 
+SUPPORTED_LAYOUTS = ['spring', 'tree', 'shell', 'circular', 'spectral']
+
+
 class GraphContainer(Container):
     """ Enable Container for Directed Acyclic Graphs
     """
@@ -14,7 +17,7 @@ class GraphContainer(Container):
     bounds = [350, 350]
     graph = Instance(networkx.Graph)
 
-    style = Enum('spring', 'tree', 'shell', 'circular', 'spectral')
+    style = Enum(SUPPORTED_LAYOUTS)
 
     # graph layout is different than Enable's layout: graph layout is
     # the relative positioning on nodes, and is very expensive
