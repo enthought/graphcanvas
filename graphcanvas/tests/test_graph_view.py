@@ -44,7 +44,7 @@ class TestGraphView(unittest.TestCase):
     def test_canvas(self):
         self.assertIsInstance(self.view._canvas, DAGContainer)
         tools = self.view._canvas.tools
-        self.assertEquals(len(tools), 2)
+        self.assertEquals(len(tools), 3)
         self.assertIsInstance(tools[0], GraphNodeSelectionTool)
         self.assertIsInstance(tools[1], GraphNodeHoverTool)
 
@@ -87,7 +87,7 @@ class TestGraphView(unittest.TestCase):
     @mock.patch('sys.stdout', new_callable=StringIO)
     def test_on_hover(self, mock_stdout):
         view = GraphView(graph=graph_from_dict({'test':['test1']}))
-        hover_tool = view._canvas.tools[-1]
+        _, hover_tool, _ = view._canvas.tools
         hover_tool._last_xy = (0, 0)
         hover_tool.on_hover()
         self.assertEqual(mock_stdout.getvalue(),
