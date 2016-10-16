@@ -15,7 +15,6 @@ class GraphNodeDragTool(ValueDragTool):
     def get_value(self):
         for node in self.component.components:
             if node.is_in(*self.original_screen_point):
-                print 'node found', node.label
                 return node
 
     def set_delta(self, value, delta_x, delta_y):
