@@ -36,8 +36,9 @@ class GraphContainer(Container):
                 component.x = layout[component._key][0] - min_x
                 component.y = self.height - max_y + layout[component._key][1]
 
-        if len(self.components) > 0:
-            initial_positions = {node.value: node.position for node in self.components}
+        initial_positions = {
+            node.value: node.position for node in self.components
+        }
         if all(point == [0.0, 0.0] for point in initial_positions.values()):
             initial_positions = None
 
