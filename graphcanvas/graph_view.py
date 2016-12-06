@@ -114,7 +114,7 @@ class GraphView(HasTraits):
         self._canvas.style = new
 
     def _on_hover(self, label):
-        print("hovering over:", label)
+        print("hovering over: {}".format(label))
 
 #    @on_trait_change('nodes.+')
     def node_changed(self, name, obj, old, new):
