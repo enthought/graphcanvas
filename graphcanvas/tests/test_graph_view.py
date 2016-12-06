@@ -1,4 +1,4 @@
-from StringIO import StringIO
+import six
 import unittest
 
 import mock
@@ -24,10 +24,10 @@ class TestGraphFromDict(unittest.TestCase):
     def test_graph_from_dict(self):
         d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']}
         g = graph_from_dict(d)
-        for key, value in d.iteritems():
+        for key, value in d.items():
             children = g.successors(key)
             expected_children = value
-            self.assertListEqual(children, expected_children)
+            six.assertCountEqual(self, children, expected_children)
 
 
 class TestGraphView(unittest.TestCase):
@@ -84,7 +84,7 @@ class TestGraphView(unittest.TestCase):
         view.graph = new_g
         self.assertListEqual(view.nodes, new_g.nodes())
 
-    @mock.patch('sys.stdout', new_callable=StringIO)
+    @mock.patch('sys.stdout', new_callable=six.StringIO)
     def test_on_hover(self, mock_stdout):
         view = GraphView(graph=graph_from_dict({'test':['test1']}))
         hover_tool = view._canvas.tools[-1]
@@ -93,7 +93,7 @@ class TestGraphView(unittest.TestCase):
         self.assertEqual(mock_stdout.getvalue(),
                          'hovering over: test\nhovering over: test1\n')
 
-    @mock.patch('sys.stdout', new_callable=StringIO)
+    @mock.patch('sys.stdout', new_callable=six.StringIO)
     def test_node_changed(self, mock_stdout):
         a = DummyHasTraitsObject(label='a')
         b = DummyHasTraitsObject(label='b')
