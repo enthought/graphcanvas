@@ -33,7 +33,7 @@ class TestLayout(unittest.TestCase):
 
         gc_xs = [value[0] for key, value in layout.items()
                  if key.startswith('child')]
-        expected_gc_xs = [x / 3 for x in range(1, 3)]
+        expected_gc_xs = [x / 3.0 for x in range(1, 3)]
         nptest.assert_almost_equal(sorted(gc_xs), expected_gc_xs)
         gc_ys = [value[1] for key, value in layout.items()
                  if key.startswith('child')]
@@ -42,7 +42,7 @@ class TestLayout(unittest.TestCase):
 
         gc_xs = [value[0] for key, value in layout.items()
                  if 'grandchild' in key]
-        expected_gc_xs = [x / 6 for x in range(1, 6)]
+        expected_gc_xs = [x / 6.0 for x in range(1, 6)]
         nptest.assert_almost_equal(sorted(gc_xs), expected_gc_xs)
         gc_ys = [value[1] for key, value in layout.items()
                  if 'grandchild' in key]
