@@ -1,6 +1,7 @@
 import unittest
 
 import networkx
+import numpy.testing as nptest
 
 from graphcanvas.layout import tree_layout
 
@@ -9,7 +10,8 @@ class TestLayout(unittest.TestCase):
     def assert_layout_positions(self, result, expected):
         result_x, result_y = result
         expected_x, expected_y = expected
-        self.assertAlmostEqual(result_x, expected_x)
+        _, mod_x = divmod(result_x, expected_x)
+        self.assertAlmostEqual(mod_x, 0.0)
         self.assertAlmostEqual(result_y, expected_y)
 
     def test_layout(self):
@@ -24,14 +26,28 @@ class TestLayout(unittest.TestCase):
         g.add_edge('child 2', 'grandchild 5')
 
         layout = tree_layout(g)
-        self.assert_layout_positions(layout['root'], (0.5, 1.0))
-        self.assert_layout_positions(layout['child 1'], (2 / 3., 0.5))
-        self.assert_layout_positions(layout['child 2'], (1 / 3., 0.5))
-        self.assert_layout_positions(layout['grandchild 1'], (5 / 6., 0.0))
-        self.assert_layout_positions(layout['grandchild 2'], (4 / 6., 0.0))
-        self.assert_layout_positions(layout['grandchild 3'], (3 / 6., 0.0))
-        self.assert_layout_positions(layout['grandchild 4'], (2 / 6., 0.0))
-        self.assert_layout_positions(layout['grandchild 5'], (1 / 6., 0.0))
+
+        expected_root_x, expected_root_y = (0.5, 1.0)
+        self.assertAlmostEqual(layout['root'][0], expected_root_x)
+        self.assertAlmostEqual(layout['root'][1], expected_root_y)
+
+        gc_xs = [value[0] for key, value in layout.items()
+                 if key.startswith('child')]
+        expected_gc_xs = [x / 3 for x in range(1, 3)]
+        nptest.assert_almost_equal(sorted(gc_xs), expected_gc_xs)
+        gc_ys = [value[1] for key, value in layout.items()
+                 if key.startswith('child')]
+        expected_gc_ys = [0.5] * 2
+        nptest.assert_almost_equal(sorted(gc_ys), expected_gc_ys)
+
+        gc_xs = [value[0] for key, value in layout.items()
+                 if 'grandchild' in key]
+        expected_gc_xs = [x / 6 for x in range(1, 6)]
+        nptest.assert_almost_equal(sorted(gc_xs), expected_gc_xs)
+        gc_ys = [value[1] for key, value in layout.items()
+                 if 'grandchild' in key]
+        expected_gc_ys = [0.0] * 5
+        nptest.assert_almost_equal(sorted(gc_ys), expected_gc_ys)
 
     def test_non_2D(self):
         g = networkx.DiGraph()
