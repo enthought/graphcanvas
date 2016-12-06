@@ -1,6 +1,7 @@
 from enable.tools.api import HoverTool
 from traits.api import Tuple
 
+
 class GraphNodeHoverTool(HoverTool):
     _last_xy = Tuple()
 
@@ -23,4 +24,3 @@ class GraphNodeHoverTool(HoverTool):
             if component.is_in(*self._last_xy):
                 if self.callback is not None:
                     self.callback(component.label)
-

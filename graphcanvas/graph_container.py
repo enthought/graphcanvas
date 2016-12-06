@@ -5,7 +5,7 @@ from enable.api import Container
 from kiva.constants import CAP_BUTT
 from traits.api import Instance, Enum, Bool, Property
 
-from layout import tree_layout
+from graphcanvas.layout import tree_layout
 
 SUPPORTED_LAYOUTS = ['spring', 'tree', 'shell', 'circular', 'spectral']
 
