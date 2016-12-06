@@ -6,11 +6,12 @@ from traits.api import HasTraits, Instance, Dict, Any, Enum, \
         on_trait_change, Property, cached_property, List
 from traitsui.api import View, Item
 
-from dag_container import DAGContainer
-from graph_container import GraphContainer, SUPPORTED_LAYOUTS
-from graph_node_component import GraphNodeComponent
-from graph_node_selection_tool import GraphNodeSelectionTool
-from graph_node_hover_tool import GraphNodeHoverTool
+from graphcanvas.dag_container import DAGContainer
+from graphcanvas.graph_container import GraphContainer, SUPPORTED_LAYOUTS
+from graphcanvas.graph_node_component import GraphNodeComponent
+from graphcanvas.graph_node_selection_tool import GraphNodeSelectionTool
+from graphcanvas.graph_node_hover_tool import GraphNodeHoverTool
+
 
 def graph_from_dict(d):
     """ Creates a NetworkX Graph from a dictionary
@@ -33,6 +34,7 @@ def graph_from_dict(d):
         for child in children:
             g.add_edge(key, child)
     return g
+
 
 class GraphView(HasTraits):
     """ View containing visualization of a networkx graph.
@@ -112,9 +114,9 @@ class GraphView(HasTraits):
         self._canvas.style = new
 
     def _on_hover(self, label):
-        print "hovering over:", label
+        print("hovering over:", label)
 
 #    @on_trait_change('nodes.+')
     def node_changed(self, name, obj, old, new):
-        print "node changed"
+        print("node changed")
         self._canvas.request_redraw()
