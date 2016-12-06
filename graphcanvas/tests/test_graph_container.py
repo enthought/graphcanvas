@@ -78,7 +78,10 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assertFalse(container._graph_layout_needed)
 
         # test circular layout
-        container = self.create_graph_container()
+        g = networkx.balanced_tree(3,5)
+        container = GraphContainer(graph=g)
+        for node in g.nodes():
+            GraphNodeComponent(container=container, value=node)
         container.style = 'circular'
         self.assertTrue(container._graph_layout_needed)
         container.do_layout()
