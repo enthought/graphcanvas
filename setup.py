@@ -4,7 +4,8 @@ from setuptools import setup, find_packages
 
 
 info = {}
-execfile(join('graphcanvas', '__init__.py'), info)
+with open(join('graphcanvas', '__init__.py')) as f:
+    exec(f.read(), info)
 
 
 setup(
