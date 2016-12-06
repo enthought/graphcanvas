@@ -90,8 +90,9 @@ class TestGraphView(unittest.TestCase):
         hover_tool = view._canvas.tools[-1]
         hover_tool._last_xy = (0, 0)
         hover_tool.on_hover()
-        self.assertEqual(mock_stdout.getvalue(),
-                         'hovering over: test\nhovering over: test1\n')
+        result_value = mock_stdout.getvalue()
+        self.assertIn('hovering over: test\n', result_value)
+        self.assertIn('hovering over: test1\n', result_value)
 
     @mock.patch('sys.stdout', new_callable=six.StringIO)
     def test_node_changed(self, mock_stdout):
