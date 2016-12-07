@@ -23,6 +23,7 @@ addons:
     - python-qt4
     - python-qt4-gl
     - python-qt4-dev
+    - python3-pyqt4
     - graphviz
 
 cache:
@@ -40,7 +41,6 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 install:
   - pip install --upgrade -r travis-ci-requirements.txt
-  - if [[ ${TRAVIS_PYTHON_VERSION} == "3.5" ]]; then pip install pyqt4; fi
   - python setup.py develop
 script:
   - coverage run -m haas -v
