@@ -40,7 +40,7 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 install:
   - pip install --upgrade -r travis-ci-requirements.txt
-  - if [[ ${TRAVIS_PYTHON_VERSION} == "3.5"]]; then pip install pyqt4; fi
+  - if [[ ${TRAVIS_PYTHON_VERSION} == "3.5" ]]; then pip install pyqt4; fi
   - python setup.py develop
 script:
   - coverage run -m haas -v
