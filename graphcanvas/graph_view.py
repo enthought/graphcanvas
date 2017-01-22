@@ -11,6 +11,7 @@ from graphcanvas.graph_container import GraphContainer, SUPPORTED_LAYOUTS
 from graphcanvas.graph_node_component import GraphNodeComponent
 from graphcanvas.graph_node_selection_tool import GraphNodeSelectionTool
 from graphcanvas.graph_node_hover_tool import GraphNodeHoverTool
+from graphcanvas.graph_node_drag_tool import GraphNodeDragTool
 
 
 def graph_from_dict(d):
@@ -76,6 +77,7 @@ class GraphView(HasTraits):
         container.tools.append(GraphNodeSelectionTool(component=container))
         container.tools.append(GraphNodeHoverTool(component=container,
                                                   callback=self._on_hover))
+        container.tools.append(GraphNodeDragTool(component=container))
         return container
 
     def __container_default(self):

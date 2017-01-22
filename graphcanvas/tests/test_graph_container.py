@@ -145,6 +145,14 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
             GraphNodeComponent(container=container, value=node)
         self.assertPathsAreCreated(container)
 
+    def test_draw_single_node(self):
+        g = networkx.DiGraph()
+        g.add_node('a')
+        container = GraphContainer(graph=g)
+        for node in g.nodes():
+            GraphNodeComponent(container=container, value=node)
+        self.assertPathsAreCreated(container)
+
     def test_weighted(self):
         g = networkx.Graph()
         g.add_edge('a','b',weight=0.6)

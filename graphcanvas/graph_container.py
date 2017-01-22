@@ -221,9 +221,7 @@ class GraphContainer(Container):
         line_ctrl1s = numpy.array(line_ctrl1s)
         line_ctrl2s = numpy.array(line_ctrl2s)
 
-
         if self.graph.is_directed():
-
             with gc:
                 gc.set_fill_color((.5,.5,.5,1))
                 for (x, y), (dx, dy) in zip(line_starts, line_ctrl1s-line_starts):
@@ -241,6 +239,8 @@ class GraphContainer(Container):
             s = 0.5
             c = 0.8660254037844386  # cos(pi/6.0)0.707106781   # sqrt(2)/2
             vec = line_ends - line_ctrl2s
+            if len(vec) == 0:
+                return
             unit_vec = vec / numpy.sqrt(vec[:,0] ** 2 + vec[:,1] ** 2)[:, numpy.newaxis]
 
             with gc:
