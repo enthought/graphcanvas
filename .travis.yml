@@ -14,7 +14,7 @@ cache:
 before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-  - .travis_ci_bootstrap_edm.sh
+  - ./travis_ci_bootstrap_edm.sh
   - edm environments create python${RUNTIME}
 install:
   - edm install -e python${RUNTIME} -y networkx traits traitsui enable numpy pillow haas coverage ${TOOLKIT}
