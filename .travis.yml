@@ -17,7 +17,7 @@ before_install:
   - ./travis_ci_bootstrap_edm.sh
   - edm environments create python${RUNTIME}
 install:
-  - edm install -e python${RUNTIME} -y networkx traits traitsui enable numpy pillow haas coverage ${TOOLKIT}
+  - edm install -e python${RUNTIME} -y networkx traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
   - edm run -e python${RUNTIME} -- pip install pygraphviz git+http://github.com/nucleic/kiwi.git#egg=kiwisolver
   - edm run -e python${RUNTIME} -- python setup.py develop
 script:
