@@ -11,3 +11,11 @@
 build/
 dist/
 docs/build/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml

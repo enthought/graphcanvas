@@ -7,10 +7,12 @@ from traits.api import HasTraits, Instance, Dict, Any, Enum, \
 from traitsui.api import View, Item
 
 from dag_container import DAGContainer
-from graph_container import GraphContainer
+from graph_container import GraphContainer, SUPPORTED_LAYOUTS
 from graph_node_component import GraphNodeComponent
 from graph_node_selection_tool import GraphNodeSelectionTool
 from graph_node_hover_tool import GraphNodeHoverTool
+from graph_node_drag_tool import GraphNodeDragTool
+
 
 def graph_from_dict(d):
     """ Creates a NetworkX Graph from a dictionary
@@ -43,7 +45,7 @@ class GraphView(HasTraits):
     nodes = Property(List, depends_on='graph')
 
     # How the graph's visualization should be layed out
-    layout = Enum('spring', 'tree', 'shell', 'circular')
+    layout = Enum(SUPPORTED_LAYOUTS)
 
     # Scrolled contained which holds the canvas in a viewport
     _container = Instance(Scrolled)
@@ -74,6 +76,7 @@ class GraphView(HasTraits):
         container.tools.append(GraphNodeSelectionTool(component=container))
         container.tools.append(GraphNodeHoverTool(component=container,
                                                   callback=self._on_hover))
+        container.tools.append(GraphNodeDragTool(component=container))
         return container
 
     def __container_default(self):
