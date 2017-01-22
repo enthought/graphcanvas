@@ -219,7 +219,6 @@ class GraphContainer(Container):
         line_ctrl1s = numpy.array(line_ctrl1s)
         line_ctrl2s = numpy.array(line_ctrl2s)
 
-
         if self.graph.is_directed():
             with gc:
                 gc.set_fill_color((.5,.5,.5,1))
