@@ -1,9 +1,0 @@
-networkx
-haas
-coverage
-numpy
-pillow
-pygraphviz
-git+http://github.com/nucleic/kiwi.git#egg=kiwisolver
-git+http://github.com/enthought/traits.git#egg=traits
-git+http://github.com/enthought/enable.git#egg=enable
