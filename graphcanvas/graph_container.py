@@ -5,7 +5,7 @@ from enable.api import Container
 from kiva.constants import CAP_BUTT
 from traits.api import Instance, Enum, Bool, Property
 
-from graphcanvas.layout import circular_layout, tree_layout
+from graphcanvas.layout import tree_layout
 
 SUPPORTED_LAYOUTS = ['spring', 'tree', 'shell', 'circular', 'spectral']
 
@@ -98,15 +98,19 @@ class GraphContainer(Container):
                 layout = networkx.drawing.nx_agraph.pygraphviz_layout(
                     self.graph, prog='twopi'
                 )
+                _apply_graphviz_layout(layout)
             except ImportError:
-                layout = circular_layout(self.graph)
+                layout = networkx.circular_layout(self.graph)
 
             # resize the bounds to fit the graph
             radius = numpy.log2(len(layout))
             self.bounds = [max(75, self.components[0].width)*2*radius,
                            max(50, self.components[0].height)*2*radius]
 
-            _apply_graphviz_layout(layout)
+            for component in self.components:
+                component.x = layout[component._key][0]
+                component.y = layout[component._key][1]
+
         else:
             layout = networkx.spring_layout(
                 self.graph,

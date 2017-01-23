@@ -178,7 +178,9 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
 
     @mock.patch('graphcanvas.layout.tree_layout')
     @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout')
-    def test_no_pygraphviz(self, mock_pygraphviz_layout, mock_tree_layout):
+    def test_no_pygraphviz_tree(self,
+                                mock_pygraphviz_layout,
+                                mock_tree_layout):
         mock_pygraphviz_layout.side_effect = ImportError()
         container = self.create_graph_container()
         container.style = 'tree'
@@ -188,6 +190,22 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         mock_pygraphviz_layout.assert_called_once_with(
             container.graph, prog='dot'
         )
+
+    @mock.patch('networkx.circular_layout')
+    @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout')
+    def test_no_pygraphviz_circular(self,
+                                    mock_pygraphviz_layout,
+                                    mock_circular_layout):
+        mock_pygraphviz_layout.side_effect = ImportError()
+        container = self.create_graph_container()
+        container.style = 'circular'
+        container.do_layout()
+        # self.assert_in_bounds(container)
+        self.assertFalse(container._graph_layout_needed)
+        mock_pygraphviz_layout.assert_called_once_with(
+            container.graph, prog='twopi'
+        )
+        mock_circular_layout.assert_called_once_with(container.graph)
 
 
 if __name__ == '__main__':
