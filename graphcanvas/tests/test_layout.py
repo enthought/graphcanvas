@@ -10,8 +10,7 @@ class TestLayout(unittest.TestCase):
     def assert_layout_positions(self, result, expected):
         result_x, result_y = result
         expected_x, expected_y = expected
-        _, mod_x = divmod(result_x, expected_x)
-        self.assertAlmostEqual(mod_x, 0.0)
+        self.assertAlmostEqual(result_x, expected_x)
         self.assertAlmostEqual(result_y, expected_y)
 
     def test_layout(self):

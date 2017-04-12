@@ -1,4 +1,3 @@
-import six
 import unittest
 
 
@@ -13,7 +12,7 @@ class TestAPI(unittest.TestCase):
         dir_no_dunders = [
             name for name in dir(graphcanvas.api) if '__' not in name
         ]
-        six.assertCountEqual(self, dir_no_dunders, import_names)
+        self.assertListEqual(dir_no_dunders, import_names)
 
 
 if __name__ == '__main__':

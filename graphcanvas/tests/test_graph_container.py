@@ -3,10 +3,13 @@ import unittest
 import mock
 import networkx
 
+from kiva.testing import KivaTestAssistant
+
 from graphcanvas.graph_container import GraphContainer
 from graphcanvas.graph_node_component import GraphNodeComponent
 from graphcanvas.graph_view import graph_from_dict
-from kiva.testing import KivaTestAssistant
+import graphcanvas
+
 
 class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
     def create_graph_container(self):
@@ -176,13 +179,16 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
 
-    @mock.patch('graphcanvas.layout.tree_layout')
+    @mock.patch('graphcanvas.graph_container.tree_layout')
     @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout')
     def test_no_pygraphviz_tree(self,
                                 mock_pygraphviz_layout,
                                 mock_tree_layout):
         mock_pygraphviz_layout.side_effect = ImportError()
         container = self.create_graph_container()
+        mock_tree_layout.return_value = {
+            node: (0, 0) for node in container.graph.nodes()
+        }
         container.style = 'tree'
         container.do_layout()
         self.assert_in_bounds(container)
@@ -190,6 +196,7 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         mock_pygraphviz_layout.assert_called_once_with(
             container.graph, prog='dot'
         )
+        mock_tree_layout.assert_called_once_with(container.graph)
 
     @mock.patch('networkx.circular_layout')
     @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout')
