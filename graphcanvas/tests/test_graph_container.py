@@ -191,7 +191,6 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         }
         container.style = 'tree'
         container.do_layout()
-        self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
         mock_pygraphviz_layout.assert_called_once_with(
             container.graph, prog='dot'
@@ -207,7 +206,6 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         container = self.create_graph_container()
         container.style = 'circular'
         container.do_layout()
-        # self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
         mock_pygraphviz_layout.assert_called_once_with(
             container.graph, prog='twopi'
