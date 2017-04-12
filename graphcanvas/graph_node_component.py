@@ -1,10 +1,12 @@
-import numpy
+from builtins import str
 from math import sqrt
+
+import numpy
 
 from enable.api import Component
 from kiva.constants import MODERN
 from kiva.fonttools import Font
-from traits.api import List, Int, Any, Str, cached_property, Property
+from traits.api import List, Int, Any, Unicode, cached_property, Property
 from traitsui.api import View, Item, spring, HGroup
 
 
@@ -20,7 +22,7 @@ class GraphNodeComponent(Component):
     value = Any
 
     # The label which will be shown on the graph node
-    label = Property(Str, depends_on='value')
+    label = Property(Unicode, depends_on='value')
 
     # The key on the graph for this node. This should not be
     # changed

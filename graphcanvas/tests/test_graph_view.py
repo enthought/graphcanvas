@@ -1,4 +1,6 @@
-import six
+from __future__ import print_function, unicode_literals
+from io import StringIO
+from sys import stdout
 import unittest
 
 import mock
@@ -6,7 +8,7 @@ import networkx
 
 from enable.api import Scrolled, Viewport
 from enable.tools.api import ViewportPanTool, ViewportZoomTool
-from traits.api import HasTraits, Str
+from traits.api import HasTraits, Unicode
 
 from graphcanvas.dag_container import DAGContainer
 from graphcanvas.graph_container import GraphContainer
@@ -16,7 +18,7 @@ from graphcanvas.graph_view import GraphView, graph_from_dict
 
 
 class DummyHasTraitsObject(HasTraits):
-    label = Str
+    label = Unicode
 
 
 class TestGraphFromDict(unittest.TestCase):
@@ -27,7 +29,7 @@ class TestGraphFromDict(unittest.TestCase):
         for key, value in d.items():
             children = g.successors(key)
             expected_children = value
-            six.assertCountEqual(self, children, expected_children)
+            self.assertListEqual(sorted(children), sorted(expected_children))
 
 
 class TestGraphView(unittest.TestCase):
@@ -84,18 +86,17 @@ class TestGraphView(unittest.TestCase):
         view.graph = new_g
         self.assertListEqual(view.nodes, new_g.nodes())
 
-    @mock.patch('sys.stdout', new_callable=six.StringIO)
-    def test_on_hover(self, mock_stdout):
+    def test_on_hover(self):
         view = GraphView(graph=graph_from_dict({'test':['test1']}))
         _, hover_tool, _ = view._canvas.tools
         hover_tool._last_xy = (0, 0)
-        hover_tool.on_hover()
+        with mock.patch('sys.stdout', new=StringIO()) as mock_stdout:
+            hover_tool.on_hover()
         result_value = mock_stdout.getvalue()
         self.assertIn('hovering over: test\n', result_value)
         self.assertIn('hovering over: test1\n', result_value)
 
-    @mock.patch('sys.stdout', new_callable=six.StringIO)
-    def test_node_changed(self, mock_stdout):
+    def test_node_changed(self):
         a = DummyHasTraitsObject(label='a')
         b = DummyHasTraitsObject(label='b')
         c = DummyHasTraitsObject(label='c')
@@ -103,7 +104,8 @@ class TestGraphView(unittest.TestCase):
         g = graph_from_dict(d)
         view = GraphView(graph=g, layout='spring')
 
-        a.label = 'test'
+        with mock.patch('sys.stdout', new=StringIO()) as mock_stdout:
+            a.label = u'test'
         self.assertEqual(mock_stdout.getvalue(), 'node changed\n')
 
 if __name__ == '__main__':

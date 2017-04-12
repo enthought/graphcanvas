@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import str as text
+
 import networkx
 
 from enable.api import ComponentEditor, Scrolled,Viewport
@@ -116,9 +119,9 @@ class GraphView(HasTraits):
         self._canvas.style = new
 
     def _on_hover(self, label):
-        print("hovering over: {}".format(label))
+        print(u"hovering over: {}".format(text(label)))
 
 #    @on_trait_change('nodes.+')
     def node_changed(self, name, obj, old, new):
-        print("node changed")
+        print(u"node changed")
         self._canvas.request_redraw()
