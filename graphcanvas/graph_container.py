@@ -103,7 +103,7 @@ class GraphContainer(Container):
                 layout = networkx.circular_layout(self.graph)
 
             # resize the bounds to fit the graph
-            radius = numpy.log2(len(layout))
+            radius = numpy.log2(len(layout)) if len(layout) != 0 else 0.0
             self.bounds = [max(75, self.components[0].width)*2*radius,
                            max(50, self.components[0].height)*2*radius]
 
