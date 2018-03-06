@@ -1,5 +1,5 @@
 from __future__ import print_function
-from builtins import str as text
+from six import text_type
 
 import networkx
 
@@ -119,7 +119,7 @@ class GraphView(HasTraits):
         self._canvas.style = new
 
     def _on_hover(self, label):
-        print(u"hovering over: {}".format(text(label)))
+        print(u"hovering over: {}".format(text_type(label)))
 
 #    @on_trait_change('nodes.+')
     def node_changed(self, name, obj, old, new):

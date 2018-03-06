@@ -1,5 +1,5 @@
-from builtins import str
 from math import sqrt
+from six import text_type
 
 import numpy
 
@@ -103,7 +103,7 @@ class GraphNodeComponent(Component):
         if hasattr(self.value, 'label'):
             text = self.value.label
         else:
-            text = str(self.value)
+            text = text_type(self.value)
         if len(text) > 20:
             text = text[0:17] + "..."
         return text
