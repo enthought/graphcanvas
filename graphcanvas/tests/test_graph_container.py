@@ -210,7 +210,11 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         mock_pygraphviz_layout.assert_called_once_with(
             container.graph, prog='twopi'
         )
-        mock_circular_layout.assert_called_once_with(container.graph)
+        mock_circular_layout.assert_called_once_with(
+            container.graph,
+            center=[bound // 2 for bound in container.bounds],
+            scale=min(container.bounds) // 2,
+        )
 
 
 if __name__ == '__main__':

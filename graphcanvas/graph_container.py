@@ -100,12 +100,11 @@ class GraphContainer(Container):
                 )
                 _apply_graphviz_layout(layout)
             except ImportError:
-                layout = networkx.circular_layout(self.graph)
-
-            # resize the bounds to fit the graph
-            radius = numpy.log2(len(layout)) if len(layout) != 0 else 0.0
-            self.bounds = [max(75, self.components[0].width)*2*radius,
-                           max(50, self.components[0].height)*2*radius]
+                layout = networkx.circular_layout(
+                    self.graph,
+                    scale=min(self.bounds) // 2,
+                    center=[bound // 2 for bound in self.bounds],
+                )
 
             for component in self.components:
                 component.x = layout[component._key][0]
