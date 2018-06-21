@@ -1,4 +1,3 @@
-from math import sqrt
 from six import text_type
 
 import numpy
@@ -6,7 +5,7 @@ import numpy
 from enable.api import Component
 from kiva.constants import MODERN
 from kiva.fonttools import Font
-from traits.api import List, Int, Any, Unicode, cached_property, Property
+from traits.api import Int, Any, Unicode, cached_property, Property
 from traitsui.api import View, Item, spring, HGroup
 
 
@@ -28,16 +27,24 @@ class GraphNodeComponent(Component):
     # changed
     _key = Any
 
-    padding_left = 5
-    padding_right = 5
-    padding_top = 5
-    padding_bottom = 5
+    padding_left = Int(5)
+    padding_right = Int(5)
+    padding_top = Int(5)
+    padding_bottom = Int(5)
 
-    traits_view = View(HGroup(
-                           spring,
-                           Item('value', style='readonly', show_label=False),
-                           spring),
-                        width=200, resizable=True)
+    traits_view = View(
+        HGroup(
+            spring,
+            Item(
+                'value',
+                style='readonly',
+                show_label=False,
+            ),
+            spring
+        ),
+        width=200,
+        resizable=True,
+    )
 
     def draw(self, gc, view_bounds=None, mode="default"):
         """ Draws the graph node
@@ -61,7 +68,6 @@ class GraphNodeComponent(Component):
 
         gc.show_text(self.label, pos)
 
-
     def _draw_border(self, gc, view_bounds, mode):
         """ Draws a nicely shaded border around the graph node
         """
@@ -76,21 +82,21 @@ class GraphNodeComponent(Component):
         gc.begin_path()
         gc.move_to(x + end_radius, y)
         gc.arc_to(x + self.width, y,
-                x + self.width, y + end_radius,
-                end_radius)
+                  x + self.width, y + end_radius,
+                  end_radius)
         gc.arc_to(x + self.width, y + self.height,
-                x + self.width - end_radius, y + self.height,
-                end_radius)
+                  x + self.width - end_radius, y + self.height,
+                  end_radius)
         gc.arc_to(x, y + self.height,
-                x, y + self.height - end_radius,
-                end_radius)
+                  x, y + self.height - end_radius,
+                  end_radius)
         gc.arc_to(x, y,
-                x + end_radius, y,
-                end_radius)
+                  x + end_radius, y,
+                  end_radius)
 
         gc.linear_gradient(x, y, x, y+100,
-                numpy.array([starting_color, ending_color]),
-                "pad")
+                           numpy.array([starting_color, ending_color]),
+                           "pad")
 
         gc.draw_path()
         gc.restore_state()

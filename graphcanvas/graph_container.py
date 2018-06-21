@@ -3,7 +3,7 @@ import numpy
 
 from enable.api import Container
 from kiva.constants import CAP_BUTT
-from traits.api import Instance, Enum, Bool, Property
+from traits.api import Bool, Enum, Instance
 
 from graphcanvas.layout import tree_layout
 
@@ -128,7 +128,6 @@ class GraphContainer(Container):
 
         self._graph_layout_needed = False
 
-
     def draw(self, gc, view_bounds=None, mode="default"):
         if self._layout_needed:
             self.do_layout()
@@ -195,24 +194,23 @@ class GraphContainer(Container):
                 ctrl2_y = dest.y - 2*dest.height
                 dest_y = dest.y
 
-
             line_starts.append([orig_x, orig_y])
             line_ends.append([dest_x, dest_y])
             line_ctrl1s.append([ctrl1_x, ctrl1_y])
             line_ctrl2s.append([ctrl2_x, ctrl2_y])
 
             with gc:
-                gc.set_stroke_color((.5,.5,.5))
-                gc.set_fill_color((1,1,1,0))
+                gc.set_stroke_color((.5, .5, .5))
+                gc.set_fill_color((1, 1, 1, 0))
 
                 # TODO: expose weighed parameters
                 attributes = self.graph.get_edge_data(*edge)
                 if 'weight' in attributes:
                     weight = attributes['weight']
                     if weight < 0.5:
-                        phase = 3 * 2.5;
-                        pattern = 3 * numpy.array((5,5))
-                        gc.set_line_dash(pattern,phase)
+                        phase = 3 * 2.5
+                        pattern = 3 * numpy.array([5, 5])
+                        gc.set_line_dash(pattern, phase)
                         gc.set_line_cap(CAP_BUTT)
 
                 gc.move_to(orig_x, orig_y)
@@ -226,37 +224,52 @@ class GraphContainer(Container):
 
         if self.graph.is_directed():
             with gc:
-                gc.set_fill_color((.5,.5,.5,1))
-                for (x, y), (dx, dy) in zip(line_starts, line_ctrl1s-line_starts):
+                gc.set_fill_color((.5, .5, .5, 1))
+                starts_and_deltas_generator = zip(
+                    line_starts,
+                    line_ctrl1s - line_starts,
+                )
+                for (x, y), (dx, dy) in starts_and_deltas_generator:
                     gc.move_to(x, y)
                     if dx < 0:
-                        gc.arc(x, y, 3, numpy.pi/2, 3*numpy.pi/2)
+                        gc.arc(x, y, 3, numpy.pi / 2, 3 * numpy.pi / 2)
                     elif dy > 0:
                         gc.arc(x, y, 3, 0, numpy.pi)
                     elif dx > 0:
-                        gc.arc(x, y, 3, numpy.pi/2, -numpy.pi/2)
+                        gc.arc(x, y, 3, numpy.pi / 2, -numpy.pi / 2)
                     else:
                         gc.arc(x, y, 3, -numpy.pi, 0)
                 gc.draw_path()
 
             s = 0.5
-            c = 0.8660254037844386  # cos(pi/6.0)0.707106781   # sqrt(2)/2
+            c = 0.8660254037844386  # cos(pi / 6.0)0.707106781   # sqrt(2) / 2
             vec = line_ends - line_ctrl2s
             if len(vec) == 0:
                 return
-            unit_vec = vec / numpy.sqrt(vec[:,0] ** 2 + vec[:,1] ** 2)[:, numpy.newaxis]
+            unit_vec = (
+                vec /
+                numpy.sqrt(vec[:, 0] ** 2 + vec[:, 1] ** 2)[:, numpy.newaxis]
+            )
 
             with gc:
-                gc.set_fill_color((1,1,1,0))
+                gc.set_fill_color((1, 1, 1, 0))
 
                 # Draw the left arrowhead (for an arrow pointing straight up)
-                arrow_ends = line_ends - numpy.array(unit_vec*numpy.matrix([[c, s], [-s, c]])) * 10
+                arrow_ends = (
+                    line_ends -
+                    numpy.array(unit_vec * numpy.matrix([[c, s], [-s, c]])) *
+                    10
+                )
                 gc.begin_path()
                 gc.line_set(line_ends, arrow_ends)
                 gc.stroke_path()
 
                 # Draw the right arrowhead (for an arrow pointing straight up)
-                arrow_ends = line_ends - numpy.array(unit_vec*numpy.matrix([[c, -s], [s, c]])) * 10
+                arrow_ends = (
+                    line_ends -
+                    numpy.array(unit_vec * numpy.matrix([[c, -s], [s, c]])) *
+                    10
+                )
                 gc.begin_path()
                 gc.line_set(line_ends, arrow_ends)
                 gc.stroke_path()

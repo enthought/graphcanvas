@@ -8,7 +8,6 @@ from kiva.testing import KivaTestAssistant
 from graphcanvas.graph_container import GraphContainer
 from graphcanvas.graph_node_component import GraphNodeComponent
 from graphcanvas.graph_view import graph_from_dict
-import graphcanvas
 
 
 class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
@@ -16,7 +15,7 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         """ Utility method to generate a GraphContainer with a simple graph for
             re-use in several tests herein.
         """
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[]}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': []}
         g = graph_from_dict(d)
         container = GraphContainer(graph=g)
         for node in g.nodes():
@@ -81,7 +80,7 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assertFalse(container._graph_layout_needed)
 
         # test circular layout
-        g = networkx.balanced_tree(3,5)
+        g = networkx.balanced_tree(3, 5)
         container = GraphContainer(graph=g)
         for node in g.nodes():
             GraphNodeComponent(container=container, value=node)
@@ -96,7 +95,7 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assertPathsAreCreated(container)
 
     def test_draw_directed_arrow_direction(self):
-        d = {'a':['b'], 'b':[]}
+        d = {'a': ['b'], 'b': []}
         g = graph_from_dict(d)
         container = GraphContainer(graph=g)
         for node in g.nodes():
@@ -140,7 +139,7 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assertPathsAreCreated(container)
 
     def test_draw_not_directed(self):
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[]}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': []}
         g = graph_from_dict(d)
         g = g.to_undirected()
         container = GraphContainer(graph=g)
@@ -158,12 +157,12 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
 
     def test_weighted(self):
         g = networkx.Graph()
-        g.add_edge('a','b',weight=0.6)
-        g.add_edge('a','c',weight=0.2)
-        g.add_edge('c','d',weight=0.1)
-        g.add_edge('c','e',weight=0.7)
-        g.add_edge('c','f',weight=0.9)
-        g.add_edge('a','d',weight=0.3)
+        g.add_edge('a', 'b', weight=0.6)
+        g.add_edge('a', 'c', weight=0.2)
+        g.add_edge('c', 'd', weight=0.1)
+        g.add_edge('c', 'e', weight=0.7)
+        g.add_edge('c', 'f', weight=0.9)
+        g.add_edge('a', 'd', weight=0.3)
         container = GraphContainer(graph=g)
         for node in g.nodes():
             GraphNodeComponent(container=container, value=node)

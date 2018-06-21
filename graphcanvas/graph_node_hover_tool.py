@@ -12,7 +12,6 @@ class GraphNodeHoverTool(HoverTool):
         self._last_xy = (event.x, event.y)
         super(GraphNodeHoverTool, self).normal_mouse_move(event)
 
-
     def on_hover(self):
         """ This gets called when all the conditions of the hover action have
         been met, and the tool determines that the mouse is, in fact, hovering

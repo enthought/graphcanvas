@@ -1,10 +1,8 @@
 from __future__ import print_function, unicode_literals
 from io import StringIO
-from sys import stdout
 import unittest
 
 import mock
-import networkx
 
 from enable.api import Scrolled, Viewport
 from enable.tools.api import ViewportPanTool, ViewportZoomTool
@@ -24,7 +22,7 @@ class DummyHasTraitsObject(HasTraits):
 class TestGraphFromDict(unittest.TestCase):
 
     def test_graph_from_dict(self):
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': [], 'e': ['d']}
         g = graph_from_dict(d)
         for key, value in d.items():
             children = g.successors(key)
@@ -35,7 +33,7 @@ class TestGraphFromDict(unittest.TestCase):
 class TestGraphView(unittest.TestCase):
 
     def setUp(self):
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': [], 'e': ['d']}
         self.g = graph_from_dict(d)
         self.view = GraphView(graph=self.g, layout='spring')
 
@@ -78,16 +76,16 @@ class TestGraphView(unittest.TestCase):
         self.assertListEqual(expected_nodes, view_nodes)
 
     def test_graph_changed(self):
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': [], 'e': ['d']}
         g = graph_from_dict(d)
         view = GraphView(graph=g, layout='spring')
-        new_d = {'f':['g'], 'g':['h', 'i', 'j'], 'h':[], 'i':[], 'j':[]}
+        new_d = {'f': ['g'], 'g': ['h', 'i', 'j'], 'h': [], 'i': [], 'j': []}
         new_g = graph_from_dict(new_d)
         view.graph = new_g
         self.assertListEqual(view.nodes, new_g.nodes())
 
     def test_on_hover(self):
-        view = GraphView(graph=graph_from_dict({'test':['test1']}))
+        view = GraphView(graph=graph_from_dict({'test': ['test1']}))
         _, hover_tool, _ = view._canvas.tools
         hover_tool._last_xy = (0, 0)
         with mock.patch('sys.stdout', new=StringIO()) as mock_stdout:
@@ -102,11 +100,12 @@ class TestGraphView(unittest.TestCase):
         c = DummyHasTraitsObject(label='c')
         d = {a: [b], b: [c], c: []}
         g = graph_from_dict(d)
-        view = GraphView(graph=g, layout='spring')
+        GraphView(graph=g, layout='spring')
 
         with mock.patch('sys.stdout', new=StringIO()) as mock_stdout:
             a.label = u'test'
         self.assertEqual(mock_stdout.getvalue(), 'node changed\n')
+
 
 if __name__ == '__main__':
     unittest.main()

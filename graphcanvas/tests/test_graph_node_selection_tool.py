@@ -3,12 +3,11 @@ import unittest
 import mock
 import networkx
 
-from enable.api import BasicEvent, Interactor
+from enable.api import BasicEvent
 from graphcanvas.graph_node_selection_tool import GraphNodeSelectionTool
 from graphcanvas.graph_container import GraphContainer
 from graphcanvas.graph_node_component import GraphNodeComponent
 from traits.api import HasTraits, Str
-from traitsui.api import Handler
 
 
 class TraitedNodeValue(HasTraits):
@@ -47,7 +46,10 @@ class TestGraphNodeSelectionTool(unittest.TestCase):
     def test_traited_node(self):
         event = BasicEvent(x=0, y=0, handled=False)
         self.container.components.pop(0)
-        node = GraphNodeComponent(value=TraitedNodeValue(label='traited_node'), position=[0, 0])
+        node = GraphNodeComponent(
+            value=TraitedNodeValue(label='traited_node'),
+            position=[0, 0],
+        )
         self.container.components.append(node)
         self.tool.normal_left_dclick(event)
         node.value.edit_traits.assert_called_once_with()

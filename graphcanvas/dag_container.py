@@ -1,7 +1,6 @@
 import networkx
 
-from enable.api import Container
-from traits.api import Instance, Enum
+from traits.api import Instance
 
 from graphcanvas.graph_container import GraphContainer
 

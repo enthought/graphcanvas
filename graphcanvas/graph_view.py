@@ -3,10 +3,11 @@ from six import text_type
 
 import networkx
 
-from enable.api import ComponentEditor, Scrolled,Viewport
+from enable.api import ComponentEditor, Scrolled, Viewport
 from enable.tools.api import ViewportPanTool
-from traits.api import HasTraits, Instance, Dict, Any, Enum, \
-        on_trait_change, Property, cached_property, List
+from traits.api import (
+    Enum, HasTraits, Instance, List, Property, cached_property
+)
 from traitsui.api import View, Item
 
 from graphcanvas.dag_container import DAGContainer
@@ -31,7 +32,7 @@ def graph_from_dict(d):
     Examples
     --------
     >>> g = graph_from_dict({'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']})
-    """
+    """  # noqa
 
     g = networkx.DiGraph()
     for key, children in d.items():
@@ -57,11 +58,16 @@ class GraphView(HasTraits):
     # The canvas which the graph will be drawn on
     _canvas = Instance(GraphContainer)
 
-    traits_view = View(Item('_container', editor=ComponentEditor(),
-                            show_label=False),
-                        width=400,
-                        height=400,
-                        resizable=True)
+    traits_view = View(
+        Item(
+            '_container',
+            editor=ComponentEditor(),
+            show_label=False,
+        ),
+        width=400,
+        height=400,
+        resizable=True,
+    )
 
     def __init__(self, *args, **kw):
         super(GraphView, self).__init__(*args, **kw)
@@ -88,11 +94,10 @@ class GraphView(HasTraits):
         """
 
         viewport = Viewport(component=self._canvas, enable_zoom=True)
-        viewport.view_position = [0,0]
+        viewport.view_position = [0, 0]
         viewport.tools.append(ViewportPanTool(viewport))
 
-        return Scrolled(self._canvas,
-                        viewport_component = viewport)
+        return Scrolled(self._canvas, viewport_component=viewport)
 
     @cached_property
     def _get_nodes(self):
@@ -121,7 +126,6 @@ class GraphView(HasTraits):
     def _on_hover(self, label):
         print(u"hovering over: {}".format(text_type(label)))
 
-#    @on_trait_change('nodes.+')
     def node_changed(self, name, obj, old, new):
         print(u"node changed")
         self._canvas.request_redraw()
