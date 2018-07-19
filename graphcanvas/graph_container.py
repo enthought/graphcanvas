@@ -36,8 +36,8 @@ class GraphContainer(Container):
             max_y = max([pos[1] for pos in layout.values()])
 
             for component in self.components:
-                component.x = layout[component._key][0] - min_x
-                component.y = self.height - max_y + layout[component._key][1]
+                component.x = self.width + layout[component._key][0] - min_x
+                component.y = self.height + layout[component._key][1] - max_y
 
         initial_positions = {
             node.value: node.position for node in self.components
