@@ -13,9 +13,9 @@ from traitsui.api import View, Item
 from graphcanvas.dag_container import DAGContainer
 from graphcanvas.graph_container import GraphContainer, SUPPORTED_LAYOUTS
 from graphcanvas.graph_node_component import GraphNodeComponent
-from graphcanvas.graph_node_selection_tool import GraphNodeSelectionTool
-from graphcanvas.graph_node_hover_tool import GraphNodeHoverTool
 from graphcanvas.graph_node_drag_tool import GraphNodeDragTool
+from graphcanvas.graph_node_hover_tool import GraphNodeHoverTool
+from graphcanvas.graph_node_selection_tool import GraphNodeSelectionTool
 
 
 def graph_from_dict(d):
