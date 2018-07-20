@@ -15,11 +15,6 @@ matrix:
       - os: osx
         env: RUNTIME=3.6 TOOLKIT=pyqt
 
-addons:
-  apt:
-    packages:
-    - graphviz
-
 cache:
   pip: true
   directories:
@@ -27,14 +22,14 @@ cache:
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --force-bottle graphviz; fi
   - export DISPLAY=:99.0
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
   - ./travis_ci_bootstrap_edm.sh
   - edm environments create python${RUNTIME} --version ${RUNTIME}
 install:
   - edm install -e python${RUNTIME} -y future networkx traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
-  - edm run -e python${RUNTIME} -- pip install pygraphviz git+http://github.com/nucleic/kiwi.git#egg=kiwisolver
+  # FIXME: pygraphviz should be installed for complete testing
+  - edm run -e python${RUNTIME} -- pip install git+http://github.com/nucleic/kiwi.git#egg=kiwisolver
   - edm run -e python${RUNTIME} -- python setup.py develop
 script:
   - edm run -e python${RUNTIME} -- coverage run -m haas -v
