@@ -3,7 +3,6 @@ import unittest
 import mock
 import networkx
 
-from enable.api import AbstractWindow, BasicEvent
 from enable.testing import EnableTestAssistant
 from graphcanvas.graph_node_drag_tool import GraphNodeDragTool
 from graphcanvas.graph_container import GraphContainer

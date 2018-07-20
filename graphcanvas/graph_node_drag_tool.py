@@ -1,5 +1,6 @@
 from enable.tools.api import ValueDragTool
 
+
 class GraphNodeDragTool(ValueDragTool):
     """ Listens for a right click on a graph node and allows the user to
         drag the selected node to a desired location. Edges are redrawn

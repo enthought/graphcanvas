@@ -3,17 +3,19 @@ import unittest
 import mock
 import networkx
 
+from kiva.testing import KivaTestAssistant
+
 from graphcanvas.graph_container import GraphContainer
 from graphcanvas.graph_node_component import GraphNodeComponent
 from graphcanvas.graph_view import graph_from_dict
-from kiva.testing import KivaTestAssistant
+
 
 class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
     def create_graph_container(self):
         """ Utility method to generate a GraphContainer with a simple graph for
             re-use in several tests herein.
         """
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[]}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': []}
         g = graph_from_dict(d)
         container = GraphContainer(graph=g)
         for node in g.nodes():
@@ -78,7 +80,10 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assertFalse(container._graph_layout_needed)
 
         # test circular layout
-        container = self.create_graph_container()
+        g = networkx.balanced_tree(3, 5)
+        container = GraphContainer(graph=g)
+        for node in g.nodes():
+            GraphNodeComponent(container=container, value=node)
         container.style = 'circular'
         self.assertTrue(container._graph_layout_needed)
         container.do_layout()
@@ -90,7 +95,7 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assertPathsAreCreated(container)
 
     def test_draw_directed_arrow_direction(self):
-        d = {'a':['b'], 'b':[]}
+        d = {'a': ['b'], 'b': []}
         g = graph_from_dict(d)
         container = GraphContainer(graph=g)
         for node in g.nodes():
@@ -134,7 +139,7 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assertPathsAreCreated(container)
 
     def test_draw_not_directed(self):
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[]}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': []}
         g = graph_from_dict(d)
         g = g.to_undirected()
         container = GraphContainer(graph=g)
@@ -152,12 +157,12 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
 
     def test_weighted(self):
         g = networkx.Graph()
-        g.add_edge('a','b',weight=0.6)
-        g.add_edge('a','c',weight=0.2)
-        g.add_edge('c','d',weight=0.1)
-        g.add_edge('c','e',weight=0.7)
-        g.add_edge('c','f',weight=0.9)
-        g.add_edge('a','d',weight=0.3)
+        g.add_edge('a', 'b', weight=0.6)
+        g.add_edge('a', 'c', weight=0.2)
+        g.add_edge('c', 'd', weight=0.1)
+        g.add_edge('c', 'e', weight=0.7)
+        g.add_edge('c', 'f', weight=0.9)
+        g.add_edge('a', 'd', weight=0.3)
         container = GraphContainer(graph=g)
         for node in g.nodes():
             GraphNodeComponent(container=container, value=node)
@@ -173,17 +178,41 @@ class TestGraphContainer(KivaTestAssistant, unittest.TestCase):
         self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
 
-    @mock.patch('graphcanvas.layout.tree_layout')
+    @mock.patch('graphcanvas.graph_container.tree_layout')
     @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout')
-    def test_no_pygraphviz(self, mock_pygraphviz_layout, mock_tree_layout):
+    def test_no_pygraphviz_tree(self,
+                                mock_pygraphviz_layout,
+                                mock_tree_layout):
         mock_pygraphviz_layout.side_effect = ImportError()
         container = self.create_graph_container()
+        mock_tree_layout.return_value = {
+            node: (0, 0) for node in container.graph.nodes()
+        }
         container.style = 'tree'
         container.do_layout()
-        self.assert_in_bounds(container)
         self.assertFalse(container._graph_layout_needed)
         mock_pygraphviz_layout.assert_called_once_with(
             container.graph, prog='dot'
+        )
+        mock_tree_layout.assert_called_once_with(container.graph)
+
+    @mock.patch('networkx.circular_layout')
+    @mock.patch('networkx.drawing.nx_agraph.pygraphviz_layout')
+    def test_no_pygraphviz_circular(self,
+                                    mock_pygraphviz_layout,
+                                    mock_circular_layout):
+        mock_pygraphviz_layout.side_effect = ImportError()
+        container = self.create_graph_container()
+        container.style = 'circular'
+        container.do_layout()
+        self.assertFalse(container._graph_layout_needed)
+        mock_pygraphviz_layout.assert_called_once_with(
+            container.graph, prog='twopi'
+        )
+        mock_circular_layout.assert_called_once_with(
+            container.graph,
+            center=[bound // 2 for bound in container.bounds],
+            scale=min(container.bounds) // 2,
         )
 
 

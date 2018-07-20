@@ -1,6 +1,7 @@
 import networkx
 import numpy
 
+
 def tree_layout(graph, dim=2, scale=1):
 
     if dim != 2:
@@ -31,7 +32,6 @@ def tree_layout(graph, dim=2, scale=1):
 
     max_depth = max(depths)
     widths = [depths.count(i) for i in range(max_depth+1)]
-    max_width = max(widths)
     nodes_positioned_at_depth = [0] * len(widths)
 
     # breadth first tree transversal
@@ -53,6 +53,5 @@ def tree_layout(graph, dim=2, scale=1):
             draw_width = width_positions[nodes_positioned_at_depth[curr_depth]]
 
             positions[curr_node] = (draw_width, draw_depth)
-
 
     return positions

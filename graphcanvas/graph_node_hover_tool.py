@@ -1,6 +1,7 @@
 from enable.tools.api import HoverTool
 from traits.api import Tuple
 
+
 class GraphNodeHoverTool(HoverTool):
     _last_xy = Tuple()
 
@@ -10,7 +11,6 @@ class GraphNodeHoverTool(HoverTool):
     def normal_mouse_move(self, event):
         self._last_xy = (event.x, event.y)
         super(GraphNodeHoverTool, self).normal_mouse_move(event)
-
 
     def on_hover(self):
         """ This gets called when all the conditions of the hover action have
@@ -23,4 +23,3 @@ class GraphNodeHoverTool(HoverTool):
             if component.is_in(*self._last_xy):
                 if self.callback is not None:
                     self.callback(component.label)
-

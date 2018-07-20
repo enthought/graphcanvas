@@ -1,12 +1,12 @@
-from StringIO import StringIO
+from __future__ import print_function, unicode_literals
+from io import StringIO
 import unittest
 
 import mock
-import networkx
 
 from enable.api import Scrolled, Viewport
 from enable.tools.api import ViewportPanTool, ViewportZoomTool
-from traits.api import HasTraits, Str
+from traits.api import HasTraits, Unicode
 
 from graphcanvas.dag_container import DAGContainer
 from graphcanvas.graph_container import GraphContainer
@@ -16,24 +16,24 @@ from graphcanvas.graph_view import GraphView, graph_from_dict
 
 
 class DummyHasTraitsObject(HasTraits):
-    label = Str
+    label = Unicode
 
 
 class TestGraphFromDict(unittest.TestCase):
 
     def test_graph_from_dict(self):
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': [], 'e': ['d']}
         g = graph_from_dict(d)
-        for key, value in d.iteritems():
+        for key, value in d.items():
             children = g.successors(key)
             expected_children = value
-            self.assertListEqual(children, expected_children)
+            self.assertListEqual(sorted(children), sorted(expected_children))
 
 
 class TestGraphView(unittest.TestCase):
 
     def setUp(self):
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': [], 'e': ['d']}
         self.g = graph_from_dict(d)
         self.view = GraphView(graph=self.g, layout='spring')
 
@@ -76,34 +76,36 @@ class TestGraphView(unittest.TestCase):
         self.assertListEqual(expected_nodes, view_nodes)
 
     def test_graph_changed(self):
-        d = {'a':['b'], 'b':['c', 'd'], 'c':[], 'd':[], 'e':['d']}
+        d = {'a': ['b'], 'b': ['c', 'd'], 'c': [], 'd': [], 'e': ['d']}
         g = graph_from_dict(d)
         view = GraphView(graph=g, layout='spring')
-        new_d = {'f':['g'], 'g':['h', 'i', 'j'], 'h':[], 'i':[], 'j':[]}
+        new_d = {'f': ['g'], 'g': ['h', 'i', 'j'], 'h': [], 'i': [], 'j': []}
         new_g = graph_from_dict(new_d)
         view.graph = new_g
         self.assertListEqual(view.nodes, new_g.nodes())
 
-    @mock.patch('sys.stdout', new_callable=StringIO)
-    def test_on_hover(self, mock_stdout):
-        view = GraphView(graph=graph_from_dict({'test':['test1']}))
+    def test_on_hover(self):
+        view = GraphView(graph=graph_from_dict({'test': ['test1']}))
         _, hover_tool, _ = view._canvas.tools
         hover_tool._last_xy = (0, 0)
-        hover_tool.on_hover()
-        self.assertEqual(mock_stdout.getvalue(),
-                         'hovering over: test\nhovering over: test1\n')
+        with mock.patch('sys.stdout', new=StringIO()) as mock_stdout:
+            hover_tool.on_hover()
+        result_value = mock_stdout.getvalue()
+        self.assertIn('hovering over: test\n', result_value)
+        self.assertIn('hovering over: test1\n', result_value)
 
-    @mock.patch('sys.stdout', new_callable=StringIO)
-    def test_node_changed(self, mock_stdout):
+    def test_node_changed(self):
         a = DummyHasTraitsObject(label='a')
         b = DummyHasTraitsObject(label='b')
         c = DummyHasTraitsObject(label='c')
         d = {a: [b], b: [c], c: []}
         g = graph_from_dict(d)
-        view = GraphView(graph=g, layout='spring')
+        GraphView(graph=g, layout='spring')
 
-        a.label = 'test'
+        with mock.patch('sys.stdout', new=StringIO()) as mock_stdout:
+            a.label = u'test'
         self.assertEqual(mock_stdout.getvalue(), 'node changed\n')
+
 
 if __name__ == '__main__':
     unittest.main()
