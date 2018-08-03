@@ -20,6 +20,11 @@ cache:
   directories:
     - $HOME/.ccache
 
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - export DISPLAY=:99.0
