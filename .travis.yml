@@ -1,5 +1,12 @@
 language: generic
 sudo: false
+
+environment:
+
+  global:
+    EDM_VER: "1.10.0"
+    EDM_MAJOR_MINOR: "1.10"
+
 matrix:
   include:
       - env: RUNTIME=2.7 TOOLKIT=pyqt
@@ -14,6 +21,7 @@ matrix:
         env: RUNTIME=3.5 TOOLKIT=pyqt
       - os: osx
         env: RUNTIME=3.6 TOOLKIT=pyqt
+      - os: windows
 
 cache:
   pip: true
@@ -21,10 +29,17 @@ cache:
     - $HOME/.ccache
 
 before_install:
+  # update tools
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+
+  # setup graphics
   - export DISPLAY=:99.0
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
-  - ./travis_ci_bootstrap_edm.sh
+
+  # install EDM
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]] || [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis_ci_bootstrap_edm.sh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then ./install-edm-windows.cmd; fi
+  # create EDM environment
   - edm environments create python${RUNTIME} --version ${RUNTIME}
 install:
   - edm install -e python${RUNTIME} -y future networkx traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
