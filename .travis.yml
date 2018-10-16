@@ -22,6 +22,7 @@ matrix:
       - os: osx
         env: RUNTIME=3.6 TOOLKIT=pyqt
       - os: windows
+        env: RUNTIME=3.6 TOOLKIT=pyqt
 
 cache:
   pip: true
