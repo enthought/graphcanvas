@@ -1,8 +1,7 @@
 language: generic
 sudo: false
 
-environment:
-
+env:
   global:
     EDM_VER: "1.10.0"
     EDM_MAJOR_MINOR: "1.10"
