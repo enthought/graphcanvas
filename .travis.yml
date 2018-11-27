@@ -1,5 +1,5 @@
 language: generic
-sudo: false
+
 matrix:
   include:
       - env: RUNTIME=2.7 TOOLKIT=pyqt
