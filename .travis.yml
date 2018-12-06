@@ -1,5 +1,6 @@
 language: generic
 sudo: false
+filter_secrets: false
 
 env:
   global:
