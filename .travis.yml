@@ -2,18 +2,18 @@ language: generic
 sudo: false
 matrix:
   include:
-      - env: RUNTIME=2.7 TOOLKIT=pyqt
-      - env: RUNTIME=2.7 TOOLKIT=pyside
-      - env: RUNTIME=3.5 TOOLKIT=pyqt
-      - env: RUNTIME=3.6 TOOLKIT=pyqt
+      - env: RUNTIME=2.7 ETS_TOOLKIT=qt4 QT_API=pyqt
+      - env: RUNTIME=2.7 ETS_TOOLKIT=qt4 QT_API=pyside
+      - env: RUNTIME=3.5 ETS_TOOLKIT=qt4 QT_API=pyqt
+      - env: RUNTIME=3.6 ETS_TOOLKIT=qt4 QT_API=pyqt
       - os: osx
-        env: RUNTIME=2.7 TOOLKIT=pyqt
+        env: RUNTIME=2.7 ETS_TOOLKIT=qt4 QT_API=pyqt
       - os: osx
-        env: RUNTIME=2.7 TOOLKIT=pyside
+        env: RUNTIME=2.7 ETS_TOOLKIT=qt4 QT_API=pyside
       - os: osx
-        env: RUNTIME=3.5 TOOLKIT=pyqt
+        env: RUNTIME=3.5 ETS_TOOLKIT=qt4 QT_API=pyqt
       - os: osx
-        env: RUNTIME=3.6 TOOLKIT=pyqt
+        env: RUNTIME=3.6 ETS_TOOLKIT=qt4 QT_API=pyqt
 
 cache:
   pip: true
@@ -32,7 +32,7 @@ before_install:
   - ./travis_ci_bootstrap_edm.sh
   - edm environments create python${RUNTIME} --version ${RUNTIME}
 install:
-  - edm install -e python${RUNTIME} -y cython networkx pillow swig mock haas coverage ${TOOLKIT}
+  - edm install -e python${RUNTIME} -y cython networkx pillow swig mock haas coverage ${QT_API}
   # FIXME: pygraphviz should be installed for complete testing
   - edm run -e python${RUNTIME} -- pip install git+https://github.com/nucleic/kiwi.git#egg=kiwisolver
   # Install ETS packages' master branches from source
