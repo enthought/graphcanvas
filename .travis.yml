@@ -1,4 +1,4 @@
-language: generic
+language: node_js
 sudo: false
 filter_secrets: false
 
