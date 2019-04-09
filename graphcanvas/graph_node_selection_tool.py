@@ -1,4 +1,4 @@
-# (C) Copyright 2010-2019 Enthought, Inc., Austin, TX
+# (C) Copyright 2009-2019 Enthought, Inc., Austin, TX
 # All rights reserved.
 
 from enable.api import BaseTool

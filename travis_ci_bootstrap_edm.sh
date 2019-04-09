@@ -1,5 +1,5 @@
 #! /usr/bin/env sh
-# (C) Copyright 2010-2019 Enthought, Inc., Austin, TX
+# (C) Copyright 2009-2019 Enthought, Inc., Austin, TX
 # All rights reserved.
 set -e
 
