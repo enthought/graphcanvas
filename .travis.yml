@@ -27,7 +27,7 @@ before_install:
   - ./travis_ci_bootstrap_edm.sh
   - edm environments create python${RUNTIME} --version ${RUNTIME}
 install:
-  - edm install -e python${RUNTIME} -y future networkx traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
+  - edm install -e python${RUNTIME} -y future networkx-1.11-7 traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
   # FIXME: pygraphviz should be installed for complete testing
   - edm run -e python${RUNTIME} -- pip install git+http://github.com/nucleic/kiwi.git#egg=kiwisolver
   - edm run -e python${RUNTIME} -- python setup.py develop
