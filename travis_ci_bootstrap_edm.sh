@@ -1,5 +1,6 @@
 #! /usr/bin/env sh
-
+# (C) Copyright 2010-2019 Enthought, Inc., Austin, TX
+# All rights reserved.
 set -e
 
 export EDM_VER=1.5

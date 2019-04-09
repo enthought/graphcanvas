@@ -1,3 +1,6 @@
+# (C) Copyright 2010-2019 Enthought, Inc., Austin, TX
+# All rights reserved.
+
 from __future__ import print_function
 from six import text_type
 

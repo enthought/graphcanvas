@@ -1,3 +1,6 @@
+# (C) Copyright 2010-2019 Enthought, Inc., Austin, TX
+# All rights reserved.
+
 import string
 import unittest
 
