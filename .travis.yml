@@ -25,7 +25,7 @@ before_install:
   - export DISPLAY=:99.0
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
   - ./travis_ci_bootstrap_edm.sh
-  - edm environments create python${RUNTIME} --version ${RUNTIME}
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then edm environments create python${RUNTIME} --version ${RUNTIME} --platform rh6-x86_64; else edm environments create python${RUNTIME} --version ${RUNTIME}; fi
 install:
   - edm install -e python${RUNTIME} -y future networkx-1.11-7 traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
   # FIXME: pygraphviz should be installed for complete testing
