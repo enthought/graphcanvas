@@ -13,9 +13,5 @@ else
     # download and install EDM
     wget https://package-data.enthought.com/edm/rh5_x86_64/${EDM_VER}/edm_${EDM_VER}.0_linux_x86_64.sh
     chmod u+x edm_${EDM_VER}.0_linux_x86_64.sh
-    ./edm_${EDM_VER}.0_linux_x86_64.sh -b -p ~
-    export PATH="~/bin:${PATH}"
+    ./edm_${EDM_VER}.0_linux_x86_64.sh -b -p "${HOME}/edm"
 fi
-
-# install pip and invoke into default EDM environment
-edm install -y pip invoke
