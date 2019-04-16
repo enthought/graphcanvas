@@ -25,6 +25,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./install-edm-linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; export PLATFORM_TAG="osx-x86_64"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; export PLATFORM_TAG="rh6-x86_64"; fi
+  - echo ${PATH}
   - edm environments create python${RUNTIME} --version ${RUNTIME} --platform ${PLATFORM_TAG}
 install:
   - edm install -e python${RUNTIME} -y future networkx-1.11-7 traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
