@@ -74,8 +74,9 @@ class GraphView(HasTraits):
 
     def __init__(self, *args, **kw):
         super(GraphView, self).__init__(*args, **kw)
-
-        if isinstance(self.graph.nodes()[0], HasTraits):
+        # import ipdb; ipdb.set_trace()
+        zeroeth_node = self.graph.nodes().__iter__().__next__()
+        if isinstance(zeroeth_node, HasTraits):
             self.on_trait_change(self.node_changed, 'nodes.+')
 
     def __canvas_default(self):
