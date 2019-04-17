@@ -74,8 +74,8 @@ class GraphView(HasTraits):
 
     def __init__(self, *args, **kw):
         super(GraphView, self).__init__(*args, **kw)
-        # import ipdb; ipdb.set_trace()
-        zeroeth_node = self.graph.nodes().__iter__().__next__()
+
+        zeroeth_node = next(self.graph.nodes().__iter__())
         if isinstance(zeroeth_node, HasTraits):
             self.on_trait_change(self.node_changed, 'nodes.+')
 
