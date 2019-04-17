@@ -85,7 +85,10 @@ class TestGraphView(unittest.TestCase):
         new_d = {'f': ['g'], 'g': ['h', 'i', 'j'], 'h': [], 'i': [], 'j': []}
         new_g = graph_from_dict(new_d)
         view.graph = new_g
-        self.assertListEqual([n for n in view.nodes], [n for n in new_g.nodes()])
+        self.assertListEqual(
+            [n for n in view.nodes],
+            [n for n in new_g.nodes()],
+        )
 
     def test_on_hover(self):
         view = GraphView(graph=graph_from_dict({'test': ['test1']}))
