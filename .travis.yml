@@ -1,11 +1,12 @@
+# (C) Copyright 2009-2019 Enthought, Inc., Austin, TX
+# All rights reserved.
+
 language: sh
-sudo: false
 filter_secrets: false
 
 env:
   global:
-    EDM_VER: "1.10.0"
-    EDM_MAJOR_MINOR: "1.10"
+    - INSTALL_EDM_VERSION=1.11.0
 
 matrix:
   include:
@@ -30,22 +31,17 @@ cache:
     - $HOME/.ccache
 
 before_install:
-  # update tools
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-
-  # setup graphics
+  - mkdir -p "${HOME}/.cache/download"
   - export DISPLAY=:99.0
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
-
-  # install EDM
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]] || [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis_ci_bootstrap_edm.sh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./install-edm-linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; export PLATFORM_TAG="rh6-x86_64"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; export PLATFORM_TAG="osx-x86_64"; fi
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then ./install-edm-windows.cmd; fi
-  # create EDM environment
-  - edm environments create python${RUNTIME} --version ${RUNTIME}
+  - echo ${PATH}
+  - edm environments create python${RUNTIME} --version ${RUNTIME} --platform ${PLATFORM_TAG}
 install:
-  - edm install -e python${RUNTIME} -y future networkx traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
+  - edm install -e python${RUNTIME} -y future networkx-1.11-7 traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
   # FIXME: pygraphviz should be installed for complete testing
-  - edm run -e python${RUNTIME} -- pip install git+http://github.com/nucleic/kiwi.git#egg=kiwisolver
   - edm run -e python${RUNTIME} -- python setup.py develop
 script:
   - edm run -e python${RUNTIME} -- coverage run -m haas -v
