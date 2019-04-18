@@ -11,7 +11,7 @@ SET EDM_MAJOR_MINOR=%MAJOR%.%MINOR%
 SET EDM_PACKAGE=edm_%INSTALL_EDM_VERSION%_x86_64.msi
 SET EDM_INSTALLER_PATH=C:\Users\travis\.cache\%EDM_PACKAGE%
 SET EDM_INSTALLER_URL=https://package-data.enthought.com/edm/win_x86_64/%EDM_MAJOR_MINOR%/%EDM_PACKAGE%
-SET COMMAND="(new-object net.webclient).DownloadFile(%EDM_INSTALLER_URL%, %EDM_INSTALLER_PATH%)"
+SET COMMAND="(new-object net.webclient).DownloadFile('%EDM_INSTALLER_URL%', '%EDM_INSTALLER_PATH%')"
 
 IF NOT EXIST %EDM_INSTALLER_PATH% CALL powershell.exe -Command %COMMAND% || GOTO error
 CALL msiexec /qn /a %EDM_INSTALLER_PATH% TARGETDIR=c:\ || GOTO error
