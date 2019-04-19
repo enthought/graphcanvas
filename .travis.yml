@@ -1,5 +1,12 @@
+# (C) Copyright 2009-2019 Enthought, Inc., Austin, TX
+# All rights reserved.
+
 language: generic
-sudo: false
+
+env:
+  global:
+    - INSTALL_EDM_VERSION=1.11.0
+
 matrix:
   include:
       - env: RUNTIME=2.7 ETS_TOOLKIT=qt4 QT_API=pyqt
@@ -26,15 +33,16 @@ notifications:
     on_failure: always
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - mkdir -p "${HOME}/.cache/download"
   - export DISPLAY=:99.0
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
-  - ./travis_ci_bootstrap_edm.sh
-  - edm environments create python${RUNTIME} --version ${RUNTIME}
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./install-edm-linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; export PLATFORM_TAG="rh6-x86_64"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; export PLATFORM_TAG="osx-x86_64"; fi
+  - echo ${PATH}
+  - edm environments create python${RUNTIME} --version ${RUNTIME} --platform ${PLATFORM_TAG}
 install:
-  - edm install -e python${RUNTIME} -y cython networkx pillow swig mock haas coverage ${QT_API}
+  - edm install -e python${RUNTIME} -y future networkx-1.11-7 traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
   # FIXME: pygraphviz should be installed for complete testing
-  - edm run -e python${RUNTIME} -- pip install git+https://github.com/nucleic/kiwi.git#egg=kiwisolver
   # Install ETS packages' master branches from source
   - edm run -e python${RUNTIME} -- pip install --no-deps git+https://github.com/enthought/traits.git
   - edm run -e python${RUNTIME} -- pip install --no-deps git+https://github.com/enthought/traitsui.git
