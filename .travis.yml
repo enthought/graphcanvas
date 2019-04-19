@@ -9,18 +9,18 @@ env:
 
 matrix:
   include:
-      - env: RUNTIME=2.7 ETS_TOOLKIT=qt4 QT_API=pyqt
-      - env: RUNTIME=2.7 ETS_TOOLKIT=qt4 QT_API=pyside
-      - env: RUNTIME=3.5 ETS_TOOLKIT=qt4 QT_API=pyqt
-      - env: RUNTIME=3.6 ETS_TOOLKIT=qt4 QT_API=pyqt
+      - env: RUNTIME=2.7 TOOLKIT=pyqt
+      - env: RUNTIME=2.7 TOOLKIT=pyside
+      - env: RUNTIME=3.5 TOOLKIT=pyqt
+      - env: RUNTIME=3.6 TOOLKIT=pyqt
       - os: osx
-        env: RUNTIME=2.7 ETS_TOOLKIT=qt4 QT_API=pyqt
+        env: RUNTIME=2.7 TOOLKIT=pyqt
       - os: osx
-        env: RUNTIME=2.7 ETS_TOOLKIT=qt4 QT_API=pyside
+        env: RUNTIME=2.7 TOOLKIT=pyside
       - os: osx
-        env: RUNTIME=3.5 ETS_TOOLKIT=qt4 QT_API=pyqt
+        env: RUNTIME=3.5 TOOLKIT=pyqt
       - os: osx
-        env: RUNTIME=3.6 ETS_TOOLKIT=qt4 QT_API=pyqt
+        env: RUNTIME=3.6 TOOLKIT=pyqt
 
 cache:
   pip: true
@@ -41,7 +41,7 @@ before_install:
   - echo ${PATH}
   - edm environments create python${RUNTIME} --version ${RUNTIME} --platform ${PLATFORM_TAG}
 install:
-  - edm install -e python${RUNTIME} -y future networkx-1.11-7 traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
+  - edm install -e python${RUNTIME} -y cython networkx-1.11-7 numpy pillow swig mock haas coverage ${TOOLKIT}
   # FIXME: pygraphviz should be installed for complete testing
   # Install ETS packages' master branches from source
   - edm run -e python${RUNTIME} -- pip install --no-deps git+https://github.com/enthought/traits.git
