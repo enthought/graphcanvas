@@ -3,6 +3,9 @@
 
 language: generic
 
+services:
+  - xvfb
+
 env:
   global:
     - INSTALL_EDM_VERSION=1.11.0
@@ -10,18 +13,18 @@ env:
 
 matrix:
   include:
-      - env: RUNTIME=2.7 QT_API=pyqt
-      - env: RUNTIME=2.7 QT_API=pyside
-      - env: RUNTIME=3.5 QT_API=pyqt
-      - env: RUNTIME=3.6 QT_API=pyqt
-      - os: osx
-        env: RUNTIME=2.7 QT_API=pyqt
-      - os: osx
-        env: RUNTIME=2.7 QT_API=pyside
-      - os: osx
-        env: RUNTIME=3.5 QT_API=pyqt
-      - os: osx
-        env: RUNTIME=3.6 QT_API=pyqt
+    - env: RUNTIME=2.7 QT_API=pyqt
+    - env: RUNTIME=2.7 QT_API=pyside
+    - env: RUNTIME=3.5 QT_API=pyqt
+    - env: RUNTIME=3.6 QT_API=pyqt
+    - os: osx
+      env: RUNTIME=2.7 QT_API=pyqt
+    - os: osx
+      env: RUNTIME=2.7 QT_API=pyside
+    - os: osx
+      env: RUNTIME=3.5 QT_API=pyqt
+    - os: osx
+      env: RUNTIME=3.6 QT_API=pyqt
 
 cache:
   pip: true
@@ -36,7 +39,6 @@ notifications:
 before_install:
   - mkdir -p "${HOME}/.cache/download"
   - export DISPLAY=:99.0
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./install-edm-linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; export PLATFORM_TAG="rh6-x86_64"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; export PLATFORM_TAG="osx-x86_64"; fi
   - echo ${PATH}
