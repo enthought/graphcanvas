@@ -52,10 +52,10 @@ install:
   - edm install -e python${RUNTIME} -y cython networkx-1.11-7 numpy pillow swig mock haas coverage ${QT_API}
   # FIXME: pygraphviz should be installed for complete testing
   # Install ETS packages' master branches from source
-  - edm run -e python${RUNTIME} -- pip install --no-deps git+https://github.com/enthought/traits.git
-  - edm run -e python${RUNTIME} -- pip install --no-deps git+https://github.com/enthought/traitsui.git
-  - edm run -e python${RUNTIME} -- pip install --no-deps git+https://github.com/enthought/pyface.git
-  - edm run -e python${RUNTIME} -- pip install --no-deps git+https://github.com/enthought/enable.git
+  - edm run -e python${RUNTIME} -- pip install git+https://github.com/enthought/traits.git
+  - edm run -e python${RUNTIME} -- pip install git+https://github.com/enthought/traitsui.git
+  - edm run -e python${RUNTIME} -- pip install git+https://github.com/enthought/pyface.git
+  - edm run -e python${RUNTIME} -- pip install git+https://github.com/enthought/enable.git
   - edm run -e python${RUNTIME} -- python setup.py develop
 script:
   - edm run -e python${RUNTIME} -- coverage run -m haas -v
