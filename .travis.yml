@@ -5,22 +5,22 @@ language: generic
 
 env:
   global:
-    - INSTALL_EDM_VERSION=1.11.0
+    - INSTALL_EDM_VERSION=2.0.0
 
 matrix:
   include:
-      - env: RUNTIME=2.7 TOOLKIT=pyqt
-      - env: RUNTIME=2.7 TOOLKIT=pyside
-      - env: RUNTIME=3.5 TOOLKIT=pyqt
-      - env: RUNTIME=3.6 TOOLKIT=pyqt
-      - os: osx
-        env: RUNTIME=2.7 TOOLKIT=pyqt
-      - os: osx
-        env: RUNTIME=2.7 TOOLKIT=pyside
-      - os: osx
-        env: RUNTIME=3.5 TOOLKIT=pyqt
-      - os: osx
-        env: RUNTIME=3.6 TOOLKIT=pyqt
+    - env: RUNTIME=2.7 TOOLKIT=pyqt
+    - env: RUNTIME=2.7 TOOLKIT=pyside
+    - env: RUNTIME=3.5 TOOLKIT=pyqt
+    - env: RUNTIME=3.6 TOOLKIT=pyqt
+    - os: osx
+      env: RUNTIME=2.7 TOOLKIT=pyqt
+    - os: osx
+      env: RUNTIME=2.7 TOOLKIT=pyside
+    - os: osx
+      env: RUNTIME=3.5 TOOLKIT=pyqt
+    - os: osx
+      env: RUNTIME=3.6 TOOLKIT=pyqt
 
 cache:
   pip: true
