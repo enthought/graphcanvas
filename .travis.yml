@@ -18,14 +18,8 @@ env:
 
 matrix:
   include:
-    - env: RUNTIME=2.7 QT_API=pyqt
-    - env: RUNTIME=2.7 QT_API=pyside
     - env: RUNTIME=3.5 QT_API=pyqt
     - env: RUNTIME=3.6 QT_API=pyqt
-    - os: osx
-      env: RUNTIME=2.7 QT_API=pyqt
-    - os: osx
-      env: RUNTIME=2.7 QT_API=pyside
     - os: osx
       env: RUNTIME=3.5 QT_API=pyqt
     - os: osx
