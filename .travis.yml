@@ -18,18 +18,30 @@ env:
 
 matrix:
   include:
-    - env: RUNTIME=2.7 QT_API=pyqt
-    - env: RUNTIME=2.7 QT_API=pyside
-    - env: RUNTIME=3.5 QT_API=pyqt
-    - env: RUNTIME=3.6 QT_API=pyqt
-    - os: osx
-      env: RUNTIME=2.7 QT_API=pyqt
-    - os: osx
-      env: RUNTIME=2.7 QT_API=pyside
-    - os: osx
-      env: RUNTIME=3.5 QT_API=pyqt
-    - os: osx
-      env: RUNTIME=3.6 QT_API=pyqt
+      - env: RUNTIME=2.7 QT_API=pyqt NX_VERSION=-1.11-7
+      - env: RUNTIME=2.7 QT_API=pyqt
+      - env: RUNTIME=2.7 QT_API=pyside NX_VERSION=-1.11-7
+      - env: RUNTIME=2.7 QT_API=pyside
+      - env: RUNTIME=3.5 QT_API=pyqt NX_VERSION=-1.11-7
+      - env: RUNTIME=3.5 QT_API=pyqt
+      - env: RUNTIME=3.6 QT_API=pyqt NX_VERSION=-1.11-7
+      - env: RUNTIME=3.6 QT_API=pyqt
+      - os: osx
+        env: RUNTIME=2.7 QT_API=pyqt NX_VERSION=-1.11-7
+      - os: osx
+        env: RUNTIME=2.7 QT_API=pyqt
+      - os: osx
+        env: RUNTIME=2.7 QT_API=pyside NX_VERSION=-1.11-7
+      - os: osx
+        env: RUNTIME=2.7 QT_API=pyside
+      - os: osx
+        env: RUNTIME=3.5 QT_API=pyqt NX_VERSION=-1.11-7
+      - os: osx
+        env: RUNTIME=3.5 QT_API=pyqt
+      - os: osx
+        env: RUNTIME=3.6 QT_API=pyqt NX_VERSION=-1.11-7
+      - os: osx
+        env: RUNTIME=3.6 QT_API=pyqt
 
 cache:
   pip: true
@@ -44,7 +56,7 @@ before_install:
   - echo ${PATH}
   - edm environments create python${RUNTIME} --version ${RUNTIME} --platform ${PLATFORM_TAG}
 install:
-  - edm install -e python${RUNTIME} -y future networkx-1.11-7 traits traitsui enable numpy pillow mock haas coverage ${QT_API}
+  - edm install -e python${RUNTIME} -y future networkx${NX_VERSION} traits traitsui enable numpy pillow mock haas coverage ${QT_API}
   # FIXME: pygraphviz should be installed for complete testing
   - edm run -e python${RUNTIME} -- python setup.py develop
 script:

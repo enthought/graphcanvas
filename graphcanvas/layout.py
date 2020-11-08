@@ -17,7 +17,7 @@ def tree_layout(graph, dim=2, scale=1):
         raise ValueError('graph must not contain cycles')
 
     roots = numpy.array([
-        node for node, degree in graph.in_degree_iter() if degree < 1
+        node for node, degree in dict(graph.in_degree()).items() if degree < 1
     ])
 
     # Find the tree width at every depth in order to layout
@@ -26,10 +26,10 @@ def tree_layout(graph, dim=2, scale=1):
     depths = []
     for node in graph.nodes():
         depth = 0
-        parents = graph.predecessors(node)
+        parents = [parent for parent in graph.predecessors(node)]
         while len(parents) > 0:
             node = parents[0]
-            parents = graph.predecessors(node)
+            parents = [parent for parent in graph.predecessors(node)]
             depth += 1
         depths.append(depth)
 
