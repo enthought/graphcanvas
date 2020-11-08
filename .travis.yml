@@ -3,36 +3,45 @@
 
 language: generic
 
+services:
+  - xvfb
+
+addons:
+  apt:
+    packages:
+      - libglu1-mesa-dev
+
 env:
   global:
-    - INSTALL_EDM_VERSION=1.11.0
+    - INSTALL_EDM_VERSION=2.0.0
+    - ETS_TOOLKIT=qt4
 
 matrix:
   include:
-      - env: RUNTIME=2.7 TOOLKIT=pyqt NX_VERSION=-1.11-7
-      - env: RUNTIME=2.7 TOOLKIT=pyqt
-      - env: RUNTIME=2.7 TOOLKIT=pyside NX_VERSION=-1.11-7
-      - env: RUNTIME=2.7 TOOLKIT=pyside
-      - env: RUNTIME=3.5 TOOLKIT=pyqt NX_VERSION=-1.11-7
-      - env: RUNTIME=3.5 TOOLKIT=pyqt
-      - env: RUNTIME=3.6 TOOLKIT=pyqt NX_VERSION=-1.11-7
-      - env: RUNTIME=3.6 TOOLKIT=pyqt
+      - env: RUNTIME=2.7 QT_API=pyqt NX_VERSION=-1.11-7
+      - env: RUNTIME=2.7 QT_API=pyqt
+      - env: RUNTIME=2.7 QT_API=pyside NX_VERSION=-1.11-7
+      - env: RUNTIME=2.7 QT_API=pyside
+      - env: RUNTIME=3.5 QT_API=pyqt NX_VERSION=-1.11-7
+      - env: RUNTIME=3.5 QT_API=pyqt
+      - env: RUNTIME=3.6 QT_API=pyqt NX_VERSION=-1.11-7
+      - env: RUNTIME=3.6 QT_API=pyqt
       - os: osx
-        env: RUNTIME=2.7 TOOLKIT=pyqt NX_VERSION=-1.11-7
+        env: RUNTIME=2.7 QT_API=pyqt NX_VERSION=-1.11-7
       - os: osx
-        env: RUNTIME=2.7 TOOLKIT=pyqt
+        env: RUNTIME=2.7 QT_API=pyqt
       - os: osx
-        env: RUNTIME=2.7 TOOLKIT=pyside NX_VERSION=-1.11-7
+        env: RUNTIME=2.7 QT_API=pyside NX_VERSION=-1.11-7
       - os: osx
-        env: RUNTIME=2.7 TOOLKIT=pyside
+        env: RUNTIME=2.7 QT_API=pyside
       - os: osx
-        env: RUNTIME=3.5 TOOLKIT=pyqt NX_VERSION=-1.11-7
+        env: RUNTIME=3.5 QT_API=pyqt NX_VERSION=-1.11-7
       - os: osx
-        env: RUNTIME=3.5 TOOLKIT=pyqt
+        env: RUNTIME=3.5 QT_API=pyqt
       - os: osx
-        env: RUNTIME=3.6 TOOLKIT=pyqt NX_VERSION=-1.11-7
+        env: RUNTIME=3.6 QT_API=pyqt NX_VERSION=-1.11-7
       - os: osx
-        env: RUNTIME=3.6 TOOLKIT=pyqt
+        env: RUNTIME=3.6 QT_API=pyqt
 
 cache:
   pip: true
@@ -42,13 +51,12 @@ cache:
 before_install:
   - mkdir -p "${HOME}/.cache/download"
   - export DISPLAY=:99.0
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./install-edm-linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; export PLATFORM_TAG="rh6-x86_64"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; export PLATFORM_TAG="osx-x86_64"; fi
   - echo ${PATH}
   - edm environments create python${RUNTIME} --version ${RUNTIME} --platform ${PLATFORM_TAG}
 install:
-  - edm install -e python${RUNTIME} -y future networkx${NX_VERSION} traits traitsui enable numpy pillow mock haas coverage ${TOOLKIT}
+  - edm install -e python${RUNTIME} -y future networkx${NX_VERSION} traits traitsui enable numpy pillow mock haas coverage ${QT_API}
   # FIXME: pygraphviz should be installed for complete testing
   - edm run -e python${RUNTIME} -- python setup.py develop
 script:
