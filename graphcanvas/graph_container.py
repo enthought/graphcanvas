@@ -117,7 +117,8 @@ class GraphContainer(Container):
             layout = networkx.spring_layout(
                 self.graph,
                 pos=initial_positions,
-                scale=scale,
+                scale=scale / 2.0,
+                center=[bound / 2.0 for bound in self.bounds]
             )
 
             # resize the bounds to fit the graph
