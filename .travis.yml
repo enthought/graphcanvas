@@ -20,13 +20,6 @@ matrix:
   include:
       - env: RUNTIME=3.6 QT_API=pyqt NX_VERSION=-1.11-7
       - env: RUNTIME=3.6 QT_API=pyqt
-<<<<<<< HEAD
-      - os: osx
-        env: RUNTIME=3.6 QT_API=pyqt NX_VERSION=-1.11-7
-      - os: osx
-        env: RUNTIME=3.6 QT_API=pyqt
-=======
->>>>>>> master
 
 cache:
   pip: true
