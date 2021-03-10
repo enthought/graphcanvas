@@ -1,48 +1,58 @@
-# (C) Copyright 2009-2019 Enthought, Inc., Austin, TX
+# (C) Copyright 2009-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 
 language: generic
-
+dist: xenial
 services:
   - xvfb
 
 addons:
   apt:
     packages:
+      - graphviz
       - libglu1-mesa-dev
 
 env:
   global:
-    - INSTALL_EDM_VERSION=2.0.0
-    - ETS_TOOLKIT=qt4
+    - INSTALL_EDM_VERSION=3.0.1
+      PYTHONUNBUFFERED="1"
+      QT_DEBUG_PLUGINS="1"
 
 matrix:
   include:
-      - env: RUNTIME=2.7 QT_API=pyqt NX_VERSION=-1.11-7
-      - env: RUNTIME=2.7 QT_API=pyqt
-      - env: RUNTIME=2.7 QT_API=pyside NX_VERSION=-1.11-7
-      - env: RUNTIME=2.7 QT_API=pyside
-      - env: RUNTIME=3.5 QT_API=pyqt NX_VERSION=-1.11-7
-      - env: RUNTIME=3.5 QT_API=pyqt
-      - env: RUNTIME=3.6 QT_API=pyqt NX_VERSION=-1.11-7
-      - env: RUNTIME=3.6 QT_API=pyqt
+  - env: RUNTIME=3.6 TOOLKITS="null pyqt pyqt5 pyside2"
+  fast_finish: true
 
 cache:
   pip: true
   directories:
+    - $HOME/.cache
     - $HOME/.ccache
 
 before_install:
   - mkdir -p "${HOME}/.cache/download"
-  - export DISPLAY=:99.0
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./install-edm-linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; export PLATFORM_TAG="rh6-x86_64"; fi
-  - echo ${PATH}
-  - edm environments create python${RUNTIME} --version ${RUNTIME} --platform ${PLATFORM_TAG}
+  - if [[ ${TRAVIS_OS_NAME} == "linux" ]] ; then
+       ccache -s;
+       ./ci/install-edm-linux.sh;
+       export PATH="${HOME}/edm/bin:/usr/lib/ccache:${PATH}";
+    else
+       ./ci/install-edm-osx.sh;
+       export PATH="${PATH}:/usr/local/bin";
+    fi
+
+  - edm install -y wheel click coverage
 install:
-  - edm install -e python${RUNTIME} -y future networkx${NX_VERSION} traits traitsui enable numpy pillow mock haas coverage ${QT_API}
-  # FIXME: pygraphviz should be installed for complete testing
-  - edm run -e python${RUNTIME} -- python setup.py develop
+  - for toolkit in ${TOOLKITS}; do
+        if [[ ${TRAVIS_EVENT_TYPE} == "cron" ]] ; then
+          edm run -- python ci/edmtool.py install --runtime=${RUNTIME} --toolkit=${toolkit} --source || exit;
+        else
+          edm run -- python ci/edmtool.py install --runtime=${RUNTIME} --toolkit=${toolkit} || exit;
+        fi;
+    done
 script:
-  - edm run -e python${RUNTIME} -- coverage run -m haas -v
+  - for toolkit in ${TOOLKITS}; do edm run -- python ci/edmtool.py test --runtime=${RUNTIME} --toolkit=${toolkit} || exit; done
+
 after_success:
-  - edm run -e python${RUNTIME} -- coverage report
+  - edm run -- coverage combine
+  - edm run -- pip install codecov
+  - edm run -- codecov
