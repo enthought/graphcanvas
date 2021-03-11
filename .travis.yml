@@ -20,7 +20,7 @@ env:
 
 matrix:
   include:
-  - env: RUNTIME=3.6 TOOLKITS="null pyqt pyqt5 pyside2"
+  - env: RUNTIME=3.6 TOOLKITS="pyqt pyqt5 pyside2"
   fast_finish: true
 
 cache:
