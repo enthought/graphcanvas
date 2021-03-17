@@ -138,14 +138,14 @@ def install(runtime, toolkit, environment, source):
         dependencies | extra_dependencies.get(toolkit, set()))
 
     if toolkit == "pyside2":
-        additional_repositories = "--add-repository enthought/lgpl"
+        additional_repos = "--add-repository enthought/lgpl"
     else:
-        additional_repositories = ""
+        additional_repos = ""
 
     # edm commands to setup the development environment
     commands = [
         "edm environments create {environment} --force --version={runtime}",
-        "edm install -y -e {environment} {packages} " + additional_repositories,
+        "edm install -y -e {environment} {packages} " + additional_repos,
         ("edm run -e {environment} -- pip install -r ci/requirements.txt"
          " --no-dependencies"),
     ]
