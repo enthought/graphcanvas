@@ -35,12 +35,26 @@ class GraphContainer(Container):
             return
 
         def _apply_graphviz_layout(layout):
-            min_x = min([pos[0] for pos in layout.values()])
-            max_y = max([pos[1] for pos in layout.values()])
+            x_values = [pos[0] for pos in layout.values()]
+            y_values = [pos[1] for pos in layout.values()]
+            min_x = min(x_values)
+            max_x = max(x_values)
+            min_y = min(y_values)
+            max_y = max(y_values)
+            x_range = max_x - min_x
+            y_range = max_y - min_y
 
             for component in self.components:
-                component.x = self.width + layout[component._key][0] - min_x
-                component.y = self.height + layout[component._key][1] - max_y
+                component.x = (
+                    self.width *
+                    (layout[component._key][0] - min_x) /
+                    x_range
+                )
+                component.y = (
+                    self.height *
+                    (layout[component._key][1] - min_y) /
+                    y_range
+                )
 
         initial_positions = {
             node.value: node.position for node in self.components
@@ -67,10 +81,6 @@ class GraphContainer(Container):
 
                 self.bounds = [max(75, self.components[0].width)*max_width,
                                max(50, self.components[0].height)*max_depth]
-
-                for component in self.components:
-                    component.x = self.width * layout[component._key][0]
-                    component.y = self.height * layout[component._key][1]
 
         elif self.style == 'shell':
             layout = networkx.shell_layout(self.graph)
@@ -108,10 +118,6 @@ class GraphContainer(Container):
                     scale=min(self.bounds) // 2,
                     center=[bound // 2 for bound in self.bounds],
                 )
-
-            for component in self.components:
-                component.x = layout[component._key][0]
-                component.y = layout[component._key][1]
 
         else:
             layout = networkx.spring_layout(
