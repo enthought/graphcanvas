@@ -38,15 +38,9 @@ cache:
 
 before_install:
   - mkdir -p "${HOME}/.cache/download"
-  - if [[ ${TRAVIS_OS_NAME} == "linux" ]] ; then
-       ccache -s;
-       ./ci/install-edm-linux.sh;
-       export PATH="${HOME}/edm/bin:/usr/lib/ccache:${PATH}";
-    else
-       ./ci/install-edm-osx.sh;
-       export PATH="${PATH}:/usr/local/bin";
-    fi
-
+  - ccache -s
+  - ./ci/install-edm-linux.sh
+  - export PATH="${HOME}/edm/bin:/usr/lib/ccache:${PATH}"
   - edm install -y wheel click coverage
 install:
   - for toolkit in ${TOOLKITS}; do
