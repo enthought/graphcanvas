@@ -47,7 +47,7 @@ class TestGraphView(unittest.TestCase):
     def test_canvas(self):
         self.assertIsInstance(self.view._canvas, DAGContainer)
         tools = self.view._canvas.tools
-        self.assertEquals(len(tools), 3)
+        self.assertEqual(len(tools), 3)
         self.assertIsInstance(tools[0], GraphNodeSelectionTool)
         self.assertIsInstance(tools[1], GraphNodeHoverTool)
 
@@ -64,14 +64,14 @@ class TestGraphView(unittest.TestCase):
         viewport = container.viewport_component
         self.assertIsInstance(viewport, Viewport)
 
-        self.assertEquals(len(viewport.tools), 2)
+        self.assertEqual(len(viewport.tools), 2)
         self.assertIsInstance(viewport.tools[0], ViewportZoomTool)
         self.assertIsInstance(viewport.tools[1], ViewportPanTool)
 
     def test_layout_changed(self):
         new_layout = 'circular'
         self.view.layout = new_layout
-        self.assertEquals(self.view._canvas.style, new_layout)
+        self.assertEqual(self.view._canvas.style, new_layout)
 
     def test_nodes(self):
         expected_nodes = [node for node in self.g.nodes()]

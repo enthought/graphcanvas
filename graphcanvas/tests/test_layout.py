@@ -53,20 +53,20 @@ class TestLayout(unittest.TestCase):
 
     def test_non_2D(self):
         g = networkx.DiGraph()
-        with self.assertRaisesRegexp(ValueError, 'only 2D graphs'):
+        with self.assertRaisesRegex(ValueError, 'only 2D graphs'):
             tree_layout(g, dim=1)
             tree_layout(g, dim=3)
 
     def test_not_directed(self):
         g = networkx.Graph()
-        with self.assertRaisesRegexp(ValueError, 'directed'):
+        with self.assertRaisesRegex(ValueError, 'directed'):
             tree_layout(g)
 
     def test_not_acyclic(self):
         g = networkx.DiGraph()
         g.add_edge('root', 'child')
         g.add_edge('child', 'root')
-        with self.assertRaisesRegexp(ValueError, 'must not contain cycles'):
+        with self.assertRaisesRegex(ValueError, 'must not contain cycles'):
             tree_layout(g)
 
 

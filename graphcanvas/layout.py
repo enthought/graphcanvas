@@ -48,7 +48,7 @@ def tree_layout(graph, dim=2, scale=1):
 
             # top-down
             draw_depth = 1.0 - float(curr_depth)/max_depth
-            depth_width = float(widths[curr_depth])
+            depth_width = widths[curr_depth]
 
             # center align
             nodes_positioned_at_depth[curr_depth] += 1

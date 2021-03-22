@@ -267,7 +267,7 @@ class GraphContainer(Container):
                 # Draw the left arrowhead (for an arrow pointing straight up)
                 arrow_ends = (
                     line_ends -
-                    numpy.array(unit_vec * numpy.matrix([[c, s], [-s, c]])) *
+                    numpy.array(unit_vec @ numpy.array([[c, s], [-s, c]])) *
                     10
                 )
                 gc.begin_path()
@@ -277,7 +277,7 @@ class GraphContainer(Container):
                 # Draw the right arrowhead (for an arrow pointing straight up)
                 arrow_ends = (
                     line_ends -
-                    numpy.array(unit_vec * numpy.matrix([[c, -s], [s, c]])) *
+                    numpy.array(unit_vec @ numpy.array([[c, -s], [s, c]])) *
                     10
                 )
                 gc.begin_path()
