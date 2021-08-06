@@ -9,7 +9,12 @@ env:
   QT_DEBUG_PLUGINS: 1
 
 on:
-  pull_request
+  workflow_dispatch:
+  # XXX pull_request only while testing; remove this trigger before merging
+  pull_request:
+  schedule:
+    # Run at 01:48 UTC every Friday
+    - cron: '48 1 * * 5'
 
 jobs:
   test-with-edm:
@@ -41,7 +46,7 @@ jobs:
           edm install -y --version=${{ env.PYTHON_VERSION }} click
       - name: Create test environment
         run: |
-          edm run -- python ci/edmtool.py install --toolkit=${{ matrix.toolkit }}
+          edm run -- python ci/edmtool.py install --toolkit=${{ matrix.toolkit }} --source
       - name: Run test suite
         uses: GabrielBB/xvfb-action@v1
         with:
