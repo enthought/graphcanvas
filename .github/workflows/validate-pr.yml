@@ -46,6 +46,7 @@ jobs:
       - name: Create test environment
         run: |
           edm run -- python ci/edmtool.py install --toolkit='pyqt5'
-      - name: Run tests
-        run: |
-          edm run -- python ci/edmtool.py test --toolkit='pyqt5'
+      - name: Run test suite
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: edm run -- python ci/edmtool.py test --toolkit='pyqt5'
