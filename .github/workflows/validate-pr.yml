@@ -17,7 +17,7 @@ jobs:
       - name: Install necessary Linux packages
         run: |
           sudo apt-get update
-          sudo apt-get install graphviz
+          sudo apt-get install graphviz libgraphviz-dev pkg-config
         if: runner.os == 'Linux'
       - name: Check out the PR branch
         uses: actions/checkout@v2
