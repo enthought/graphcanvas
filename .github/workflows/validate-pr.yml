@@ -24,7 +24,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install graphviz libgraphviz-dev pkg-config
-          # sudo apt-get install libxkbcommon-x11-0
+          sudo apt-get install libxkbcommon-x11-0
           # sudo apt-get install libxcb-image0
         if: runner.os == 'Linux'
       - name: Check out the PR branch
