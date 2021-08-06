@@ -1,0 +1,28 @@
+# Workflow to validate commits to an open PR.
+
+name: Validate PR
+
+env:
+  INSTALL_EDM_VERSION: 3.2.3
+  PYTHON_VERSION: 3.6
+
+on:
+  pull_request
+
+jobs:
+  test-with-edm:
+    runs-on: ${{ ubuntu-latest }}
+
+    steps:
+      - name: Check out the PR branch
+        uses: actions/checkout@v2
+      - name: Set up EDM
+        uses: enthought/setup-edm-action@v1
+        with:
+          edm-version: ${{ env.INSTALL_EDM_VERSION }}
+      - name: Provision bootstrap environment
+        run: edm install -y --version=${{ env.PYTHON_VERSION }} click
+      - name: Create test environment
+        run: edm run -- python ci/edmtool.py install
+      - name: Run tests
+        run: edm run -- python ci/edmtool.py test
