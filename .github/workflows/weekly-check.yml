@@ -30,7 +30,6 @@ jobs:
           sudo apt-get install libxkbcommon-x11-0
           # Needed for the Enable install
           sudo apt-get install libglu1-mesa-dev
-
       - name: Check out the PR branch
         uses: actions/checkout@v2
       - name: Cache EDM packages
