@@ -24,14 +24,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install graphviz libgraphviz-dev pkg-config
-          sudo apt-get install libglu1-mesa-dev
+          # sudo apt-get install libglu1-mesa-dev
           sudo apt-get install libxkbcommon-x11-0
-          sudo apt-get install libxcb-icccm4
+          # sudo apt-get install libxcb-icccm4
           sudo apt-get install libxcb-image0
-          # sudo apt-get install libxcb-keysyms1
-          # sudo apt-get install libxcb-randr0
-          # sudo apt-get install libxcb-render-util0
-          # sudo apt-get install libxcb-xinerama0
         if: runner.os == 'Linux'
       - name: Check out the PR branch
         uses: actions/checkout@v2
