@@ -5,6 +5,8 @@ name: Validate PR
 env:
   INSTALL_EDM_VERSION: 3.2.3
   PYTHON_VERSION: 3.6
+  PYTHONUNBUFFERED: 1
+  QT_DEBUG_PLUGINS: 1
 
 on:
   pull_request
@@ -18,7 +20,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install graphviz libgraphviz-dev pkg-config
-          sudo apt-get install qt5-default
+          sudo apt-get install libglu1-mesa-dev
           sudo apt-get install libxkbcommon-x11-0
           sudo apt-get install libxcb-icccm4
           sudo apt-get install libxcb-image0
