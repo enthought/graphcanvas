@@ -14,6 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install necessary Linux packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install graphviz
+        if: runner.os == 'Linux'
       - name: Check out the PR branch
         uses: actions/checkout@v2
       - name: Cache EDM packages
@@ -26,8 +31,11 @@ jobs:
         with:
           edm-version: ${{ env.INSTALL_EDM_VERSION }}
       - name: Provision bootstrap environment
-        run: edm install -y --version=${{ env.PYTHON_VERSION }} click
+        run: |
+          edm install -y --version=${{ env.PYTHON_VERSION }} click
       - name: Create test environment
-        run: edm run -- python ci/edmtool.py install
+        run: |
+          edm run -- python ci/edmtool.py install
       - name: Run tests
-        run: edm run -- python ci/edmtool.py test
+        run: |
+          edm run -- python ci/edmtool.py test
