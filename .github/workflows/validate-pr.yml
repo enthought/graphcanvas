@@ -23,7 +23,7 @@ jobs:
       - name: Install necessary Linux packages
         run: |
           sudo apt-get update
-          sudo apt-get install graphviz libgraphviz-dev pkg-config
+          sudo apt-get install graphviz libgraphviz-dev
           sudo apt-get install libxkbcommon-x11-0
         if: runner.os == 'Linux'
       - name: Check out the PR branch
