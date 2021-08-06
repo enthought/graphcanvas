@@ -43,7 +43,7 @@ jobs:
           edm install -y --version=${{ env.PYTHON_VERSION }} click
       - name: Create test environment
         run: |
-          edm run -- python ci/edmtool.py install
+          edm run -- python ci/edmtool.py --toolkit='pyqt5' install
       - name: Run tests
         run: |
-          edm run -- python ci/edmtool.py test
+          edm run -- python ci/edmtool.py --toolkit='pyqt5' test
