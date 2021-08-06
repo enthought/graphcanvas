@@ -1,4 +1,4 @@
-# Workflow to run tests weekly on the main branch.
+# Workflow to run tests weekly on the main branch, against latest ETS sources.
 
 name: Weekly check
 
@@ -10,8 +10,6 @@ env:
 
 on:
   workflow_dispatch:
-  # XXX pull_request only while testing; remove this trigger before merging
-  pull_request:
   schedule:
     # Run at 01:48 UTC every Friday
     - cron: '48 1 * * 5'
@@ -30,6 +28,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install graphviz libgraphviz-dev
           sudo apt-get install libxkbcommon-x11-0
+          # Needed for the Enable install
           sudo apt-get install libglu1-mesa-dev
 
       - name: Check out the PR branch
