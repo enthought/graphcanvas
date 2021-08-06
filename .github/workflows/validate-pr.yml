@@ -16,6 +16,11 @@ jobs:
     steps:
       - name: Check out the PR branch
         uses: actions/checkout@v2
+      - name: Cache EDM packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-${{ hashFiles('etstool.py') }}
       - name: Set up EDM
         uses: enthought/setup-edm-action@v1
         with:
