@@ -45,8 +45,8 @@ jobs:
           edm install -y --version=${{ env.PYTHON_VERSION }} click
       - name: Create test environment
         run: |
-          edm run -- python ci/edmtool.py install --toolkit='pyqt5'
+          edm run -- python ci/edmtool.py install --toolkit=pyqt5
       - name: Run test suite
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: edm run -- python ci/edmtool.py test --toolkit='pyqt5'
+          run: edm run -- python ci/edmtool.py test --toolkit=pyqt5
