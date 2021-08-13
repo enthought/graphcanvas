@@ -17,5 +17,4 @@ Prerequisites
 -------------
 
 * `NetworkX <http:://networkx.lanl.gov>`_
-* `distribute <http://pypi.python.org/pypi/distribute>`_
 * enable
