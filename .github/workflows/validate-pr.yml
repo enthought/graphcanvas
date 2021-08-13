@@ -1,0 +1,48 @@
+# Workflow to validate commits to an open PR.
+
+name: Validate PR
+
+env:
+  INSTALL_EDM_VERSION: 3.2.3
+  PYTHON_VERSION: 3.6
+  PYTHONUNBUFFERED: 1
+  QT_DEBUG_PLUGINS: 1
+
+on:
+  pull_request
+
+jobs:
+  test-with-edm:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        toolkit: ['pyqt', 'pyqt5', 'pyside2']
+
+    steps:
+      - name: Install necessary Linux packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install graphviz libgraphviz-dev
+          sudo apt-get install libxkbcommon-x11-0
+      - name: Check out the PR branch
+        uses: actions/checkout@v2
+      - name: Cache EDM packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-${{ hashFiles('ci/edmtool.py') }}
+      - name: Set up EDM
+        uses: enthought/setup-edm-action@v1
+        with:
+          edm-version: ${{ env.INSTALL_EDM_VERSION }}
+      - name: Provision bootstrap environment
+        run: |
+          edm install -y --version=${{ env.PYTHON_VERSION }} click
+      - name: Create test environment
+        run: |
+          edm run -- python ci/edmtool.py install --toolkit=${{ matrix.toolkit }}
+      - name: Run test suite
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: edm run -- python ci/edmtool.py test --toolkit=${{ matrix.toolkit }}
